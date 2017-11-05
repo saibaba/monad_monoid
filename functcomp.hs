@@ -1,6 +1,7 @@
 -- https://stackoverflow.com/questions/3870088/a-monad-is-just-a-monoid-in-the-category-of-endofunctors-whats-the-problem
 -- https://stackoverflow.com/questions/19774564/what-does-it-mean-to-compose-two-functors
 
+-- identity functor - just a holder of a value
 newtype Identity a = Identity { runIdentity :: a }
 
 instance Functor Identity where

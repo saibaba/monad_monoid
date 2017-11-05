@@ -67,14 +67,7 @@ check1 = quickCheck $ \n -> mappend (one (),  n :: Integer) == n
 
 -- now we want to show that "category" of endo-functors is a monoid
 
--- Functor composition has two parts:
--- part 1: compose objects (E.g., MaybeList or ListMaybe and so on..)
--- part 2: compose morphisms (fmap of composed functor unpacks these two levels 
---         (for example a thing stored in List of Maybe's ) and applies f to it, then repackages
-
--- part 1
 type (f :<%> g) x = f (g x)
--- part 2
 --(<%>) :: (f b -> c) -> (a -> b) -> f a -> c
 (<%>) f g = f . fmap g
 -- note <%> used in two different contexts (a) type :<%> (b) operator <%>

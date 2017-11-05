@@ -18,6 +18,7 @@ Most of the stuff is just re-iteration of what is said and learnt from the refre
   * binary operation
   * identity law
   * associativity law
+  * return vs. id and bind vs. join
 
 Two things to keep in mind:
   - A functor is a way of operating on the content of something without touching the structure.
