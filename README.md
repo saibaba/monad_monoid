@@ -3,6 +3,8 @@ Introduction
 
 Experiments to understand: "A monad is just a monoid in the category of endofunctors, what's the probleⅿ?"
 
+Most of the stuff is just re-iteration of what is said and learnt from the refrences given.
+
 * Functor Composition
   * mapping objects
   * mapping morphisms
