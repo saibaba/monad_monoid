@@ -151,7 +151,6 @@ test_law2' =
   -- mappend' (id (fmap mappend' JJJ20))
   -- mappend' (id J (mappend' J J20)
 
---test_eta' = ((eta_lhs' (\x -> Just (23+x) ) 10)::Maybe (Maybe Integer)) == (eta_rhs' (\x -> Just (23+x)) 10)
 test_eta' = (eta_lhs' (\x -> Just (23+x) ) 10) == (eta_rhs' (\x -> Just (23+x)) 10)
 
 test_mu' = (mu_lhs' (\x -> Just (23+x)) (Just (Just 10))) == (mu_rhs' (\x -> Just (23+x)) (Just (Just 10)))

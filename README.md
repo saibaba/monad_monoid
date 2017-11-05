@@ -3,7 +3,21 @@ Introduction
 
 Experiments to understand: "A monad is just a monoid in the category of endofunctors, what's the probleⅿ?"
 
-More pragmatically these experiments help to internalize that:
+* Functor Composition
+  * mapping objects
+  * mapping morphisms
+
+* Moniods
+  * binary operation
+  * identity law
+  * associativity law
+
+* Monad as monoid
+  * binary operation
+  * identity law
+  * associativity law
+
+Two things to keep in mind:
   - A functor is a way of operating on the content of something without touching the structure.
   - A natural transformation is a way of operating on the structure of something without touching or looking at the content.
 
@@ -15,3 +29,6 @@ Ref
 * http://w.pitula.me/2016/monad-proof/
 * https://medium.com/@sinisalouc/demistifying-the-monad-in-scala-part-2-a-category-theory-approach-2f0a6d370eff
 * https://stackoverflow.com/questions/19774564/what-does-it-mean-to-compose-two-functors
+* http://blog.sigfpe.com/2008/11/from-monoids-to-monads.html
+* https://dzone.com/articles/functor-and-monad-examples-in-plain-java
+* https://www.quora.com/Is-a-monad-really-a-monoid-in-the-category-of-endofunctors
