@@ -80,7 +80,7 @@ Since T is a functor, we can lift g and then compose.
 T<sub>m</sub> g :: T<sub>o</sub> b -> T<sub>o</sub> (T<sub>o</sub> c)
 or
 T<sub>m</sub> g :: T<sub>o</sub> b -> T<sub>o</sub><sup>2</sup> c
-</ore>
+</pre>
 
 But, now you have to get rid of T<sub>o</sub><sup>2</sup>.
 
