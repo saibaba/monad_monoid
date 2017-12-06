@@ -271,15 +271,17 @@ This is represented using ⊗.
 It assigns to each pair of objects (i.e., takes two objects as input/arguments) an object a⊗b, of the same category and returns this object. Returned object is a pair or composite functor.
 
 <pre>
-⊗ :: C X C -> C   (here X means it takes two arguments while ⊗ itself could be category product or composite functor).
+⊗ :: C X C -> C   
 
-<a, b> |-> a⊗b
+(here X means it takes two arguments while ⊗ itself could be category product or composite functor).
+
+&lt;a, b&gt; |-> a⊗b
 </pre>
 
 Since it is a functor, it takes two  morphisms and returns a new arrow (again, of the same same category). Result is a lefted version of  the function such that the resulting arrow  stores both of the input arrows such that each operates on its object counter part in the structure.
 
 <pre>
-<f, g> |-> f ⊗ g 
+&lt;f, g&gt; |-> f ⊗ g 
 
 f  ⊗ g is of type <strong>a ⊗ b -> c ⊗ d</strong> where f: a-> c and g : b -> d.
 </pre>
