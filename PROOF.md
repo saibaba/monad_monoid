@@ -203,6 +203,10 @@ bimap mu fn = mu . T<sub>m</sub> fn
 gn <> fn = (bimap join gn) . fn
 </pre>
 
+Here bimap expects two functions which are natural transformmations. Because of above Identity functor a -> T<sub>o</sub> b can be treated as a natural transformation.
+
+Then redo above steps:
+
 <pre>
 
 f : a -> T b
@@ -261,7 +265,7 @@ r6 = T<sub>m</sub> r5 . f : a -> T<sub>o</sub> (T2 d)
 
 rhs = mu . r6  : T<sub>o</sub> -> Tr d
 
-Here Tr stands for reduction of (T<sub>o<sub>) T2) by mu.
+Here Tr stands for reduction of (T<sub>o</sub>) T2) by mu.
 Hence Tr corresponds to reduction order  Tx(TxT).
 </pre>
 
