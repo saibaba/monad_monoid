@@ -180,7 +180,7 @@ fn(a) = f(a)
 </pre>
 
 
-Also, remember the definition of bifunctor:
+Also, remember the definition of bifunctor in the endofunctor category [C,C] (objects=endofunctors; morphisms = natural transformations).
 
 <pre>
 bimap :: (F -> F') -> (G -> G') -> (F ∘ G -> F' ∘ G')
