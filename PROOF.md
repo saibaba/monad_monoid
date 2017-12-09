@@ -335,8 +335,8 @@ Now, what is the use of this associativity and putting functions in a -> T b for
 
 Two uses already:
 
-*Every function further down has access to various variables at previous level.
-*T can be a Monad like Maybe or Either could be used to handle errors and/or terminate prematurely the chain of calls.
+* Every function further down has access to various variables at previous level.
+* T can be a Monad like Maybe or Either could be used to handle errors and/or terminate prematurely the chain of calls.
 
 See, this example:
 
