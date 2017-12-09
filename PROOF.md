@@ -158,6 +158,166 @@ So,
 
 We want associativity of object mapping of endofunctor composition, which turns out to be the case.
 
+One more thing:
+
+Because of identity endofunctor, any functor in endofunctor category can be treated as a natural transformation:
+
+<pre>
+Io(a) = a
+
+Hence Io a = id<sub>a</sub>
+Or
+I = id
+</pre>
+
+So a kleisli arrow like f: a -> T b can be written as a nat. trans.
+
+<pre>
+fn : I a -> T b
+
+fn(a) = f(a)
+
+</pre>
+
+
+Also, remember the definition of bifunctor:
+
+<pre>
+bimap :: (F -> F') -> (G -> G') -> (F o G -> F' o G')
+With F = T<sub>o</sub> o T<sub>o</sub>
+     F'= T<sub>o</sub>
+     G = I<sub>o</sub>
+     G'= T<sub>o</sub>
+     F o G = T<sub>o</sub> o T<sub>o</sub> o I<sub>o</sub> = T<sub>o</sub> o T<sub>o</sub>
+     F' o G' = T<sub>o</sub> o T<sub>o</sub>
+
+bimap mu fn = mu . T<sub>m</sub> fn = T a -> T b
+</pre>
+
+
+Let's do the same again with-in categorical setting:
+
+First, define 2 abbreviations:
+<pre>
+bimap mu fn = mu . T<sub>m</sub> fn
+gn <> fn = (bimap join gn) . fn
+</pre>
+
+<pre>
+
+f : a -> T b
+g : b -> T c
+h : c -> T d
+
+
+f : a -> T b
+
+T<sub>m</sub> g : T<sub>o</sub> b -> T<sub>o</sub> (T<sub>o</sub> c)
+
+r1 = T<sub>m</sub> g . f : a -> T<sub>o</sub> (T<sub>o</sub> c)
+
+r2 = mu . r1 : a -> T1 c
+
+Here T1 stands for T<sub>o</sub> resulted out of reduction of T<sub>o</sub> (T<sub>o</sub>) by mu.
+
+T<sub>m</sub> h : T1 c -> T1 (T<sub>o</sub> d)
+
+r3 = T<sub>m</sub> h . r2 : a -> T1 (T<sub>o</sub> d)
+
+lhs = mu . r3 : a -> Tl d
+
+Here Tl stands for reduction of T1 (T<sub>o</sub>) by mu.
+Hence Tl corresponds to reduction order (TxT)xT.
+
+</pre>
+
+Unrolling lhs and simplifying using above abbreviations:
+
+<pre>
+lhs = mu . (T<sub>m</sub> h . (mu . (T<sub>m</sub> g . f)))
+
+lhs = h <> (g <> f)
+</pre>
+
+<strong>Hence h <> (g <> f) corrsponds to (TxT)xT.</strong>
+
+Now try this way:
+
+<pre>
+g : b -> T<sub>o</sub> c
+T<sub>m</sub> h : T<sub>o</sub> c -> T<sub>o</sub>(T<sub>o</sub> d)
+
+r4 = T<sub>m</sub> h . g : b -> T<sub>o</sub> (T<sub>o</sub> d)
+
+r5 = mu . r4 : b -> T2 d
+
+Here T2 corrsponds to T<sub>o</sub> resulted out of reduction of T<sub>o</sub> (T<sub>o</sub>) by mu.
+
+Now decide to compose with f:
+
+T<sub>m</sub> r5 : T<sub>o</sub> b -> T<sub>o</sub> (T2 d)
+
+r6 = T<sub>m</sub> r5 . f : a -> T<sub>o</sub> (T2 d)
+
+rhs = mu . r6  : T<sub>o</sub> -> Tr d
+
+Here Tr stands for reduction of (T<sub>o<sub>) T2) by mu.
+Hence Tr corresponds to reduction order  Tx(TxT).
+</pre>
+
+Unrolling rhs and simplifying using above abbreviations:
+<pre>
+rhs = mu . ( T<sub>m</sub> (mu . (T<sub>m</sub> h . g) )  ) . f
+
+rhs = mu . T<sub>m</sub> (h <> g)  . f
+
+rhs = (h <> g) <> f
+
+</pre>
+
+<strong>Hence (h <> g) <> f corrsponds to Tx(TxT).</strong>
+
+We expect lhs = rhs
+
+So, Tl = Tr
+
+So (TxT)xT = Tx(TxT)
+
+Composition must be associative.
+
+
+A sample in Haskell:
+
+<pre>
+{-# LANGUAGE RankNTypes #-}
+import Control.Monad(join)
+import Test.QuickCheck
+
+
+--bimap :: (Functor f, Functor g, Functor f', Functor g) => forall a . (f a -> f' a) -> (g b -> g' b) -> (f (g a) -> f' (g' a))
+bimap mu fn = mu . fmap fn
+
+-- couple of Kleisli arrows
+
+kinc :: Int -> Maybe Int
+kinc v = Just (v+1)
+
+kdec :: Int -> Maybe Int
+kdec v = Just (v-1)
+
+-- composing them using bifunctor
+
+gn <> fn = (bimap join gn) . fn
+
+lhs =  kdec <> (kinc <> kinc)
+rhs =  (kdec <> kinc) <> kinc
+
+chk n = lhs n == rhs n
+check = quickCheck $ \n -> chk n
+
+main = do
+  check
+</pre>
 
 
 Introduction
