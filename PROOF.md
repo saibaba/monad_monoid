@@ -183,15 +183,15 @@ fn(a) = f(a)
 Also, remember the definition of bifunctor:
 
 <pre>
-bimap :: (F -> F') -> (G -> G') -> (F o G -> F' o G')
-With F = T<sub>o</sub> o T<sub>o</sub>
+bimap :: (F -> F') -> (G -> G') -> (F ∘ G -> F' ∘ G')
+With F = T<sub>o</sub> ∘ T<sub>o</sub>
      F'= T<sub>o</sub>
      G = I<sub>o</sub>
      G'= T<sub>o</sub>
-     F o G = T<sub>o</sub> o T<sub>o</sub> o I<sub>o</sub> = T<sub>o</sub> o T<sub>o</sub>
-     F' o G' = T<sub>o</sub> o T<sub>o</sub>
+     F ∘ G = T<sub>o</sub> o T<sub>o</sub> o I<sub>o</sub> = T<sub>o</sub> o T<sub>o</sub>
+     F' ∘ G' = T<sub>o</sub> o T<sub>o</sub>
 
-bimap mu fn = mu . T<sub>m</sub> fn = T a -> T b
+bimap mu fn = mu . T<sub>m</sub> fn = T<sub>o</sub> a -> T<sub>o</sub> b
 </pre>
 
 
