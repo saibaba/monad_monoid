@@ -394,6 +394,10 @@ main = do
 
 </pre>
 
+<strong>
+So, the most important ingredients in understanding monads: endofunctor composition, join, and fmap with simplification by bifunctor. Note that you could have done everything without bifunctor too, it just simplifies things (like matrix in math).
+</strong>
+
 Introduction
 -------------
 
