@@ -331,6 +331,68 @@ main = do
 
 </pre>
 
+Now, what is the use of this associativity and putting functions in a -> T b form ?
+
+Two uses already:
+
+#Every function further down has access to various variables at previous level.
+#T can be a Monad like Maybe or Either could be used to handle errors and/or terminate prematurely the chain of calls.
+
+See, this example:
+
+<pre>
+
+-- naive
+wordCount = map (head &&& length) . group . sort . words . map toLower
+
+-- Kleiski arrows
+mToLower t = Identity ( map toLower t)
+mWords t = Identity (words t)
+mSort l = Identity (sort l)
+mGroup l = Identity (group l)
+mFreq g = Identity (map (head &&& length) g)
+
+-- re-arrange for easy handling
+-- m a -> (a -> m b) -> m b
+mv <=> f = (bimap join f) mv
+
+wordCount mtext = mtext <=> mToLower <=> mWords <=> mSort <=> mGroup <=> mFreq
+-- associativity allows to do this to above as long as  order on the page is maintained
+wordCountAssoc  mtext = mtext <=> (mToLower <=> (mWords <=> (mSort <=> (mGroup <=> mFreq))))
+
+-- expand with lambdas
+wordCountExp mtext = mtext <=> mToLower <=> (\lt -> ( (mWords lt) <=> (\w -> ((mSort w) <=> (\sw -> ((mGroup sw) <=> (\g -> (mFreq g))))))))
+
+-- Notice, every function further down has access to various variables at previous level.
+-- Instead of Identity, a more complex Monad like Maybe or Either could be used to handle errors and/or terminate prematurely
+
+wordCountExpMl mtext = mtext <=> mToLower <=>
+  (\lt -> 
+    ( (mWords lt) <=>  
+        (\w -> 
+          ( (mSort w) <=> 
+              (\sw -> 
+                ( (mGroup sw) <=> (\g -> 
+                    (mFreq g)
+                  )
+                )
+              )
+          )
+        )
+    )
+  )
+
+mtext = Identity "Hadoop is the Elephant King  A yellow and elegant thing  He never forgets Useful data or lets An extraneous element cling  Hadoop is an elegant fellow  An elephant gentle and mellow  He never gets mad Or does anything bad Because at his core he is yellow"
+
+main = do
+  check1
+  check2
+  print $ wordCount mtext
+  print ""
+  print ""
+  print $ wordCountExp mtext
+
+</pre>
 
 Introduction
 -------------
