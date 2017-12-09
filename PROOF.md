@@ -188,8 +188,8 @@ With F = T<sub>o</sub> ∘ T<sub>o</sub>
      F'= T<sub>o</sub>
      G = I<sub>o</sub>
      G'= T<sub>o</sub>
-     F ∘ G = T<sub>o</sub> o T<sub>o</sub> o I<sub>o</sub> = T<sub>o</sub> o T<sub>o</sub>
-     F' ∘ G' = T<sub>o</sub> o T<sub>o</sub>
+     F ∘ G = T<sub>o</sub> ∘ T<sub>o</sub> ∘ I<sub>o</sub> = T<sub>o</sub> ∘ T<sub>o</sub>
+     F' ∘ G' = T<sub>o</sub> ∘ T<sub>o</sub>
 
 bimap mu fn = mu . T<sub>m</sub> fn = T<sub>o</sub> a -> T<sub>o</sub> b
 </pre>
@@ -315,12 +315,20 @@ gn <> fn = (bimap join gn) . fn
 
 lhs =  kdec <> (kinc <> kinc)
 rhs =  (kdec <> kinc) <> kinc
+chk1 n = lhs n == rhs n
+check1 = quickCheck $ \n -> chk1 n
 
-chk n = lhs n == rhs n
-check = quickCheck $ \n -> chk n
+-- this precisely correspond to the diagrams in https://bartoszmilewski.com/2016/12/27/monads-categorically/
+lhs_id n = (bimap id join (Just (Just (Just n))))
+rhs_id n = (bimap join id (Just (Just (Just n))))
+chk2 :: Int -> Bool
+chk2 n = lhs_id n == rhs_id n
+check2 = quickCheck $ \n -> chk2 n
 
 main = do
-  check
+  check1
+  check2
+
 </pre>
 
 
