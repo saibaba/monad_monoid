@@ -88,7 +88,7 @@ What we need is a function:
 <pre>
 mu: T<sub>o</sub><sup>2</sup> -> T<sub>o</sub>
 or its instantiations (components or indexing by object):
-mu<sub>x/sub>: T<sub>o</sub><sup>2</sup> x -> T<sub>o</sub> x
+mu<sub>x</sub>: T<sub>o</sub><sup>2</sup> x -> T<sub>o</sub> x
 </pre>
 
 So, the result is:
