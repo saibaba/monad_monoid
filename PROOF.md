@@ -86,12 +86,14 @@ But, now you have to get rid of T<sub>o</sub><sup>2</sup>.
 
 What we need is a function:
 <pre>
-mu: T<sub>o</sub><sup>2</sup> x -> T<sub>o</sub> x
+mu: T<sub>o</sub><sup>2</sup> -> T<sub>o</sub>
+or its instantiations (components or indexing by object):
+mu<sub>x/sub>: T<sub>o</sub><sup>2</sup> x -> T<sub>o</sub> x
 </pre>
 
 So, the result is:
 <pre>
-gf = mu . T<sub>m</sub> g . f :: a -> T<sub>o</sub> c
+gf = mu<sub>c</sub> . T<sub>m</sub> g . f :: a -> T<sub>o</sub> c
 </pre>
 
 Now let's say we created a new kleisli arrow:
@@ -109,9 +111,10 @@ T<sub>m</sub> h :: T<sub>o</sub> c -> T<sub>o</sub><sup>2</sup> d
 
 So, the result is:
 <pre>
-hgf = mu . T<sub>m</sub> h . gf
+hgf1 = T<sub>m</sub> h . gf  :  a -> T<sub>o</sub><sup>2</sup> d
+hgf = mu<sub>d</sub> . T<sub>m</sub> h . gf
 or
-hgf = mu . T<sub>m</sub> h . mu . T<sub>m</sub> g . f :: a -> T<sub>o</sub> d
+hgf = mu<sub>d</sub> . T<sub>m</sub> h . mu<sub>c</sub> . T<sub>m</sub> g . f :: a -> T<sub>o</sub> d
 </pre>
 
 In above you notice that reduction of T powers is done in this order <strong>T<sub>o</sub> ( T<sub>o</sub> (T<sub>o</sub>) )</strong>.
@@ -133,7 +136,7 @@ T<sub>m</sub> h :: T<sub>o</sub> c -> T<sub>o</sub><sup>2</sup> d
 
 So,
 <pre>
-hg = mu . T<sub>m</sub> h . g :: b -> T<sub>o</sub> d
+hg = mu<sub>d</sub> . T<sub>m</sub> h . g :: b -> T<sub>o</sub> d
 </pre>
 
 Now let's say that later you decide to compose hg with f.
@@ -289,6 +292,37 @@ So (TxT)xT = Tx(TxT)
 
 Composition must be associative.
 
+Now one more time, this time without reduction with mu.
+
+f: a -> T b
+
+First, ignore f and see how we compose g and h and keep it ready for composition with f 
+(because in the two methods we try below, there is no need to lift f and hence can be left out).
+
+Also, lifting mu-x    : T^2 x -> T x
+Tm mu-x               : T (T^2 x) -> T (T x)
+vs. instantiating with T x:
+mu-T x                : T^2 (T x) -> T (T x)
+
+You can compose g and h by lifting h:
+
+Tm h                  : T c -> T^2 d
+Tm h . g              : b -> T^2 d
+Now, to compose with f we just need to lift above result :
+Tm (Tm h. g)          : T b ->  T (T^2 d)
+Now, above is ready to be composed with f.
+
+We could also do this way:
+
+Tm g                  : T b -> T^2 c
+Tm h                  : T c -> T^2 d
+Tm (Tm h)             : T^2 c -> T (T^2 d)
+Here you can compose g and h now:
+Tm (Tm h) . Tm g      : T b -> T (T^2 d)
+Above is ready to be composed with f
+
+
+
 
 A sample in Haskell:
 
@@ -397,6 +431,8 @@ main = do
 <strong>
 So, the most important ingredients in understanding monads: endofunctor composition, join, and fmap with simplification by bifunctor. Note that you could have done everything without bifunctor too, it just simplifies things (like matrix in math).
 </strong>
+
+Notice that all in all, the associativity (and left/right unitor) of endofunctor composition directly translates to associativity of various operators like <=>, bind, or whatever else you define.
 
 Introduction
 -------------
