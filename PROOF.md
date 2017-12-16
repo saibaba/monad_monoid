@@ -306,12 +306,12 @@ rhs = mu<sub>d</sub> . ( T<sub>m</sub> (mu<sub>c</sub> . (T<sub>m</sub> h . g) )
 
 Naturality of mu:
 
-  x   (T (T x)) ------ mu-x --------> T x
+  x   (T<sub>o</sub> (T<sub>o</sub> x)) ------ mu<sub>x</sub> --------> T<sub>o</sub> x
   |      |                             |
-f |   (T (T f))                       T f
+f |   (T<sub>o</sub> (T<sub>o</sub> f))                       T<sub>o</sub> f
   |      |                             |
   v      v                             v
-  y  (T (T (T y))) ---- mu-T y ---> (T (T y))
+  y  (T<sub>o</sub> (T<sub>o</sub> (T<sub>o</sub> y))) ---- mu<sub>T<sub>o</sub> y</sub> ---> (T<sub>o</sub> (T<sub>o</sub> y))
    
 
 lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
