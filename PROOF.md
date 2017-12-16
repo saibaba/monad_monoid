@@ -223,17 +223,17 @@ T<sub>m</sub> g : T<sub>o</sub> b -> T<sub>o</sub> (T<sub>o</sub> c)
 
 r1 = T<sub>m</sub> g . f : a -> T<sub>o</sub> (T<sub>o</sub> c)
 
-r2 = mu . r1 : a -> T1 c
+r2 = mu<sub>c</sub> . r1 : a -> T1 c
 
-Here T1 stands for T<sub>o</sub> resulted out of reduction of T<sub>o</sub> (T<sub>o</sub>) by mu.
+Here T1 stands for T<sub>o</sub> resulted out of reduction of T<sub>o</sub> (T<sub>o</sub>) by mu<sub>c</sub>.
 
 T<sub>m</sub> h : T1 c -> T1 (T<sub>o</sub> d)
 
 r3 = T<sub>m</sub> h . r2 : a -> T1 (T<sub>o</sub> d)
 
-lhs = mu . r3 : a -> Tl d
+lhs = mu<sub>d</sub> . r3 : a -> Tl d
 
-Here Tl stands for reduction of T1 (T<sub>o</sub>) by mu.
+Here Tl stands for reduction of T1 (T<sub>o</sub>) by mu<sub>d</sub>.
 Hence Tl corresponds to reduction order (TxT)xT.
 
 </pre>
@@ -241,7 +241,7 @@ Hence Tl corresponds to reduction order (TxT)xT.
 Unrolling lhs and simplifying using above abbreviations:
 
 <pre>
-lhs = mu . (T<sub>m</sub> h . (mu . (T<sub>m</sub> g . f)))
+lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
 
 lhs = h <> (g <> f)
 </pre>
@@ -256,9 +256,9 @@ T<sub>m</sub> h : T<sub>o</sub> c -> T<sub>o</sub>(T<sub>o</sub> d)
 
 r4 = T<sub>m</sub> h . g : b -> T<sub>o</sub> (T<sub>o</sub> d)
 
-r5 = mu . r4 : b -> T2 d
+r5 = mu<sub>d</sub> . r4 : b -> T2 d
 
-Here T2 corrsponds to T<sub>o</sub> resulted out of reduction of T<sub>o</sub> (T<sub>o</sub>) by mu.
+Here T2 corrsponds to T<sub>o</sub> resulted out of reduction of T<sub>o</sub> (T<sub>o</sub>) by mu<sub>d</sub>.
 
 Now decide to compose with f:
 
@@ -266,9 +266,9 @@ T<sub>m</sub> r5 : T<sub>o</sub> b -> T<sub>o</sub> (T2 d)
 
 r6 = T<sub>m</sub> r5 . f : a -> T<sub>o</sub> (T2 d)
 
-rhs = mu . r6  : T<sub>o</sub> -> Tr d
+rhs = mu<sub>T<sub>o</sub> d</sub> . r6  : T<sub>o</sub> -> Tr d
 
-Here Tr stands for reduction of (T<sub>o</sub>) T2) by mu.
+Here Tr stands for reduction of (T<sub>o</sub>) T2) by mu<sub>T<sub>o</sub> d</sub>.
 Hence Tr corresponds to reduction order  Tx(TxT).
 </pre>
 
@@ -292,36 +292,48 @@ So (TxT)xT = Tx(TxT)
 
 Composition must be associative.
 
-Now one more time, this time without reduction with mu.
+Let's analyze this a little further, before chaining with f:
 
-f: a -> T b
+lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
+rhs = mu . ( T<sub>m</sub> (mu . (T<sub>m</sub> h . g) )  ) . f
 
-First, ignore f and see how we compose g and h and keep it ready for composition with f 
-(because in the two methods we try below, there is no need to lift f and hence can be left out).
+OR equivalently,
 
-Also, lifting mu-x    : T^2 x -> T x
-Tm mu-x               : T (T^2 x) -> T (T x)
-vs. instantiating with T x:
-mu-T x                : T^2 (T x) -> T (T x)
+lhs = (T<sub>m</sub> h . (mu . (T<sub>m</sub> g . f)))
+rhs = ( T<sub>m</sub> (mu . (T<sub>m</sub> h . g) )  ) . f
 
-You can compose g and h by lifting h:
+Since T<sub>m</sub> preserves function composition, rhs can be written as:
+rhs = T<sub>m</sub> mu . T<sub>m</sub> (T<sub>m</sub> h . g)  . f
 
-Tm h                  : T c -> T^2 d
-Tm h . g              : b -> T^2 d
-Now, to compose with f we just need to lift above result :
-Tm (Tm h. g)          : T b ->  T (T^2 d)
-Now, above is ready to be composed with f.
-
-We could also do this way:
-
-Tm g                  : T b -> T^2 c
-Tm h                  : T c -> T^2 d
-Tm (Tm h)             : T^2 c -> T (T^2 d)
-Here you can compose g and h now:
-Tm (Tm h) . Tm g      : T b -> T (T^2 d)
-Above is ready to be composed with f
+Now:
+lhs = T<sub>m</sub> h . (mu . (T<sub>m</sub> g . f))
+rhs = T<sub>m</sub> mu . T<sub>m</sub> (T<sub>m</sub> h . g)  . f
 
 
+lhs = mu<sub>d</sub> . (T<sub>m<sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
+
+rhs = mu<sub>d</sub> . ( T<sub>m</sub> (mu<sub>c</sub> . (T<sub>m</sub> h . g) )  ) . f
+
+Naturality of mu:
+
+  x   (T (T x)) ------ mu-x --------> T x
+  |      |                             |
+f |   (T (T f))                       T f
+  |      |                             |
+  v      v                             v
+  y  (T (T (T y))) ---- mu-T y ---> (T (T y))
+   
+
+lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
+    = mu<sub>d</sub> . T<sub>m</sub> h . mu<sub>c</sub> . T<sub>m</sub> g . f
+    = mu<sub>d</sub> . ( T<sub>m</sub> h . mu<sub>c</sub> ) . T<sub>m</sub> g . f
+    = mu<sub>d</sub> . ( mu<sub>T<sub>o</sub> d</sub> . T<sub>m</sub>^2 h ) . T<sub>m</sub> g . f    [ from natuality above with f = h, x = c, y = d]
+    = mu<sub>d</sub> . mu<sub>T<sub>o</sub> d</sub> . T<sub>m</sub>^2 h . T<sub>m</sub> g . f       
+    = mu<sub>d</sub> . T<sub>m</sub> mu<sub>d</sub> . T<sub>m</sub> (T<sub>m</sub> h . g) . f        [ mu-T d = T mu<sub>d</sub> i.e., associativity of functor composition; and functor presevers composition ]
+    = mu<sub>d</sub> . T<sub>m</sub> ( mu<sub>d</sub> . T<sub>m</sub> h . g) . f          [functor preserves composition]
+    = rhs
+ 
+So, to prove it we leveraged mu<sub>T<sub>o</sub> x</sub> = T<sub>m</sub> mu<sub>x</sub> which requires Tx(TxT) = (TxT)xT.
 
 
 A sample in Haskell:
@@ -814,8 +826,7 @@ h :: c -> M d
 
 Prove the same using join instead of bind:
 
-bind f = join (fmap f)
-
+bind f = join . fmap f
 
 </pre>
 
