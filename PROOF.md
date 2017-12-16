@@ -266,17 +266,17 @@ T<sub>m</sub> r5 : T<sub>o</sub> b -> T<sub>o</sub> (T2 d)
 
 r6 = T<sub>m</sub> r5 . f : a -> T<sub>o</sub> (T2 d)
 
-rhs = mu<sub>T<sub>o</sub> d</sub> . r6  : T<sub>o</sub> -> Tr d
+rhs = mu<sub>d</sub> . r6  : T<sub>o</sub> -> Tr d
 
-Here Tr stands for reduction of (T<sub>o</sub>) T2) by mu<sub>T<sub>o</sub> d</sub>.
+Here Tr stands for reduction of (T<sub>o</sub>) T2) by mu<sub>d</sub>.
 Hence Tr corresponds to reduction order  Tx(TxT).
 </pre>
 
 Unrolling rhs and simplifying using above abbreviations:
 <pre>
-rhs = mu . ( T<sub>m</sub> (mu . (T<sub>m</sub> h . g) )  ) . f
+rhs = mu<sub>d</sub> . ( T<sub>m</sub> (mu<sub>d</sub> . (T<sub>m</sub> h . g) )  ) . f
 
-rhs = mu . T<sub>m</sub> (h <> g)  . f
+rhs = mu<sub>d</sub> . T<sub>m</sub> (h <> g)  . f
 
 rhs = (h <> g) <> f
 
@@ -297,23 +297,11 @@ Let's analyze this a little further:
 <pre>
 
 lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
-rhs = mu . ( T<sub>m</sub> (mu . (T<sub>m</sub> h . g) )  ) . f
+rhs = mu<sub>d</sub> . T<sub>m</sub> (h <> g)  . f
 
-OR equivalently,
-
-lhs = (T<sub>m</sub> h . (mu . (T<sub>m</sub> g . f)))
-rhs = ( T<sub>m</sub> (mu . (T<sub>m</sub> h . g) )  ) . f
-
-Since T<sub>m</sub> preserves function composition, rhs can be written as:
-rhs = T<sub>m</sub> mu . T<sub>m</sub> (T<sub>m</sub> h . g)  . f
-
-Now:
-lhs = T<sub>m</sub> h . (mu . (T<sub>m</sub> g . f))
-rhs = T<sub>m</sub> mu . T<sub>m</sub> (T<sub>m</sub> h . g)  . f
-
+OR
 
 lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
-
 rhs = mu<sub>d</sub> . ( T<sub>m</sub> (mu<sub>c</sub> . (T<sub>m</sub> h . g) )  ) . f
 
 Naturality of mu:
@@ -329,8 +317,8 @@ f |   (T (T f))                       T f
 lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
     = mu<sub>d</sub> . T<sub>m</sub> h . mu<sub>c</sub> . T<sub>m</sub> g . f
     = mu<sub>d</sub> . ( T<sub>m</sub> h . mu<sub>c</sub> ) . T<sub>m</sub> g . f
-    = mu<sub>d</sub> . ( mu<sub>T<sub>o</sub> d</sub> . T<sub>m</sub>^2 h ) . T<sub>m</sub> g . f    [ from natuality above with f = h, x = c, y = d]
-    = mu<sub>d</sub> . mu<sub>T<sub>o</sub> d</sub> . T<sub>m</sub>^2 h . T<sub>m</sub> g . f       
+    = mu<sub>d</sub> . ( mu<sub>T<sub>o</sub> d</sub> . T<sub>m</sub><sup>2</sup> h ) . T<sub>m</sub> g . f    [ from natuality above with f = h, x = c, y = d]
+    = mu<sub>d</sub> . mu<sub>T<sub>o</sub> d</sub> . T<sub>m</sub><sup>2</sup> h . T<sub>m</sub> g . f       
     = mu<sub>d</sub> . T<sub>m</sub> mu<sub>d</sub> . T<sub>m</sub> (T<sub>m</sub> h . g) . f        [ mu-T d = T mu<sub>d</sub> i.e., associativity of functor composition; and functor presevers composition ]
     = mu<sub>d</sub> . T<sub>m</sub> ( mu<sub>d</sub> . T<sub>m</sub> h . g) . f          [functor preserves composition]
     = rhs
