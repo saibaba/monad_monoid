@@ -54,12 +54,6 @@ wordCount = map (head &&& length) . ( group . sort ) . words . map toLower
 Or
 
 <pre>
-wordCount = map (head &&& length) . ( group . sort ) . words . map toLower
-</pre>
-
-Or even
-
-<pre>
 wordCount = map (head &&& length) . ( group . ( sort  . ( words . (map toLower))))
 </pre>
 
