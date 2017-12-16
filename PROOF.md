@@ -38,7 +38,8 @@ f2 o f3 = (2 x + 1)^2 + (2 x + 1) + 2
 and so on...
 </pre>
 
-Don't you wish you had the same level of flexibility when writing programs? Like, this:
+Don't you wish you had the same level of flexibility when writing programs? Like, below where each function could continue
+the flow or terminate prematurely due to various conditions?
 
 <pre>
 wordCount = map (head &&& length) . group . sort . words . map toLower
