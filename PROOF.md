@@ -294,6 +294,8 @@ Composition must be associative.
 
 Let's analyze this a little further, before chaining with f:
 
+<pre>
+
 lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
 rhs = mu . ( T<sub>m</sub> (mu . (T<sub>m</sub> h . g) )  ) . f
 
@@ -335,6 +337,7 @@ lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f
  
 So, to prove it we leveraged mu<sub>T<sub>o</sub> x</sub> = T<sub>m</sub> mu<sub>x</sub> which requires Tx(TxT) = (TxT)xT.
 
+</pre>
 
 A sample in Haskell:
 
