@@ -292,7 +292,7 @@ So (TxT)xT = Tx(TxT)
 
 Composition must be associative.
 
-Let's analyze this a little further, before chaining with f:
+Let's analyze this a little further:
 
 <pre>
 
