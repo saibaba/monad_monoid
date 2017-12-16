@@ -36,8 +36,41 @@ Here,
 
 f2 o f3 = (2 x + 1)^2 + (2 x + 1) + 2
 and so on...
-
 </pre>
+
+Don't you wish you had the same level of flexibility when writing programs? Like, this:
+
+<pre>
+wordCount = map (head &&& length) . group . sort . words . map toLower
+</pre>
+
+Or any of these combinations if you already have some functions grouped already in a previous project due to other needs:
+
+<pre>
+wordCount = map (head &&& length) . ( group . sort ) . words . map toLower
+</pre>
+
+Or
+
+<pre>
+wordCount = map (head &&& length) . ( group . sort ) . words . map toLower
+</pre>
+
+Or even
+
+<pre>
+wordCount = map (head &&& length) . ( group . ( sort  . ( words . (map toLower))))
+</pre>
+
+Or even more control:
+
+<pre>
+wordCount = map (head &&& length) . group . ( (\l -> dynamically_figure_out_sort_based_on_list_content l)) .  words . map toLower
+</pre>
+
+Or any of these combinations depending on situation.
+
+Enter monads...
  
 Legend
 ------
@@ -539,7 +572,7 @@ Monoidal Category
 
 A monoidal category has an extra <strong>structure</strong> on top of a regular category. Additional structure is achieved through composite functors or category product and so on.
 
-They way this is done is via a functor, called bifunctor.
+The way this is done is via a functor, called bifunctor.
 
 Think of bifunctor taking two objects and returning another object all from the same category. For example it can take two objects and return a pair (assuming all pairs are also in the category). Another example is composite functor (one inside another like Maybe [] or [Maybe].
 
