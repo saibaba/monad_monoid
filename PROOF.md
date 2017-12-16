@@ -126,7 +126,7 @@ gf = mu<sub>c</sub> . T<sub>m</sub> g . f :: a -> T<sub>o</sub> c
 
 Now let's say we created a new kleisli arrow:
 <pre>
-h : c -> T d
+h : c -> T<sub>o</sub> d
 </pre>
 
 And we want to compose h with gf. We apply same idea of lifting.
@@ -234,7 +234,7 @@ bimap mu fn = mu . T<sub>m</sub> fn
 gn <> fn = (bimap join gn) . fn
 </pre>
 
-Here bimap expects two functions which are natural transformmations. Because of above Identity functor a -> T<sub>o</sub> b can be treated as a natural transformation.
+Here bimap expects two functions which are natural transformmations. Because of above Identity functor a -> T<sub>o</sub> b can be treated as a natural transformation. <strong>TODO: replace this with unit in the analysis below to be super accurate.</strong>
 
 Then redo above steps:
 
