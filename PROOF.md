@@ -240,12 +240,12 @@ Then redo above steps:
 
 <pre>
 
-f : a -> T b
-g : b -> T c
-h : c -> T d
+f : a -> T<sub>o</sub> b
+g : b -> T<sub>o</sub> c
+h : c -> T<sub>o</sub> d
 
 
-f : a -> T b
+f : a -> T<sub>o</sub> b
 
 T<sub>m</sub> g : T<sub>o</sub> b -> T<sub>o</sub> (T<sub>o</sub> c)
 
