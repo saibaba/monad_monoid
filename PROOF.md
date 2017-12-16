@@ -312,7 +312,7 @@ lhs = T<sub>m</sub> h . (mu . (T<sub>m</sub> g . f))
 rhs = T<sub>m</sub> mu . T<sub>m</sub> (T<sub>m</sub> h . g)  . f
 
 
-lhs = mu<sub>d</sub> . (T<sub>m<sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
+lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
 
 rhs = mu<sub>d</sub> . ( T<sub>m</sub> (mu<sub>c</sub> . (T<sub>m</sub> h . g) )  ) . f
 
