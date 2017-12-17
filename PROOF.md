@@ -398,7 +398,7 @@ main = do
 
 You can see all of above pictorially here:
 
-<img src="https://github.com/saibaba/monad_monoid/blob/master/proof.jpg" width="600" />
+<img src="https://github.com/saibaba/monad_monoid/blob/master/proof.png" width="600" />
 
 
 Now, what is the use of this associativity and putting functions in a -> T b form ?
