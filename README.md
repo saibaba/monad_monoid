@@ -25,6 +25,7 @@ Two things to keep in mind:
   - A natural transformation is a way of operating on the structure of something without touching or looking at the content.
 
 The dirty details are spelled out in (PROOF.md).
+
 Ref
 ==
 
