@@ -355,6 +355,11 @@ So, to prove it we leveraged mu<sub>T<sub>o</sub> x</sub> = T<sub>m</sub> mu<sub
 
 </pre>
 
+You can see all of above pictorially here:
+
+<img src="https://github.com/saibaba/monad_monoid/blob/master/proof.png" width="600" />
+
+
 A sample in Haskell:
 
 <pre>
@@ -395,10 +400,6 @@ main = do
   check2
 
 </pre>
-
-You can see all of above pictorially here:
-
-<img src="https://github.com/saibaba/monad_monoid/blob/master/proof.png" width="600" />
 
 
 Now, what is the use of this associativity and putting functions in a -> T b form ?
