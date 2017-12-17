@@ -398,8 +398,7 @@ main = do
 
 You can see all of above pictorially here:
 
-![alt text](proof.jpg "Proof drawing")
-
+<img src="https://github.com/saibaba/monad_monoid/blob/master/proof.jpg" width="600" />
 
 
 Now, what is the use of this associativity and putting functions in a -> T b form ?
