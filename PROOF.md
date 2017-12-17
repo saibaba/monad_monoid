@@ -398,7 +398,7 @@ main = do
 
 You can see all of above pictorially here:
 
-![alt text](https://github.com/saibaba/monad_monoid/blob/master/proof.jpg "Proof drawing")
+![alt text](proof.jpg "Proof drawing")
 
 
 
