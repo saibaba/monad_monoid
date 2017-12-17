@@ -396,6 +396,12 @@ main = do
 
 </pre>
 
+You can see all of above pictorially here:
+
+![alt text](https://github.com/saibaba/monad_monoid/blob/master/proof.jpg "Proof drawing")
+
+
+
 Now, what is the use of this associativity and putting functions in a -> T b form ?
 
 Two uses already:
