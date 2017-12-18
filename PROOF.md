@@ -361,6 +361,16 @@ You can see all of above pictorially here:
 <img src="https://github.com/saibaba/monad_monoid/blob/master/bifun_assoc.png" width="600" />
 <img src="https://github.com/saibaba/monad_monoid/blob/master/monad_assoc.png" width="600" />
 
+The red and green paths differ between T<sub>o</sub><sup>2</sup> c and T<sub>o</sub><sup>2</sup> d.
+
+Naturality (blue path) allows us to prove that this is a commutating square.
+
+But, our equations above use T<sub>m</sub> mu<sub>d</sub> for the bottom leg where as naturality 
+uses mu<sub>T<sub>o</sub> d</sub>.
+
+So, we have to add additional condition that mu<sub>T<sub>o</sub> d</sub> = T<sub>m</sub> mu<sub>d</sub> which is
+achieved endofunctor composition (bifunctor).
+
 
 A sample in Haskell:
 
