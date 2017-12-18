@@ -357,7 +357,9 @@ So, to prove it we leveraged mu<sub>T<sub>o</sub> x</sub> = T<sub>m</sub> mu<sub
 
 You can see all of above pictorially here:
 
-<img src="https://github.com/saibaba/monad_monoid/blob/master/proof.png" width="600" />
+<img src="https://github.com/saibaba/monad_monoid/blob/master/naturality.png" width="600" />
+<img src="https://github.com/saibaba/monad_monoid/blob/master/bifun_assoc.png" width="600" />
+<img src="https://github.com/saibaba/monad_monoid/blob/master/monad_assoc.png" width="600" />
 
 
 A sample in Haskell:
