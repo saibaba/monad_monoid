@@ -355,7 +355,7 @@ lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f
     = mu<sub>d</sub> . ( mu<sub>T<sub>o</sub> d</sub> . T<sub>m</sub><sup>2</sup> h ) . T<sub>m</sub> g . f    [ from natuality above with f = h, x = c, y = d]
     = mu<sub>d</sub> . mu<sub>T<sub>o</sub> d</sub> . T<sub>m</sub><sup>2</sup> h . T<sub>m</sub> g . f       
     = mu<sub>d</sub> . T<sub>m</sub> mu<sub>d</sub> . T<sub>m</sub> (T<sub>m</sub> h . g) . f        [ mu<sub>T<sub>o</sub> d</sub> = T<sub>m</sub> mu<sub>d</sub> i.e., associativity of functor composition;
-                                                                                                        and functor presevers composition ]
+                                                      and functor presevers composition ]
     = mu<sub>d</sub> . T<sub>m</sub> ( mu<sub>d</sub> . T<sub>m</sub> h . g) . f          [functor preserves composition]
     = rhs
  
