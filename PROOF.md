@@ -336,10 +336,10 @@ Naturality of mu:
 
   x      (T<sub>o</sub> (T<sub>o</sub> x)) ------ mu<sub>x</sub> --------> T<sub>o</sub> x
   |         |                             |
-f |      (T<sub>o</sub> (T<sub>o</sub> f))                       T<sub>o</sub> f
+f |      (T<sub>o</sub> (T<sub>o</sub> f))                     T<sub>o</sub> f
   |         |                             |
   v         v                             v
- T<sub>o</sub> y     (T<sub>o</sub><sup>2</sup> (T<sub>o</sub> y)) ---- mu<sub>T<sub>o</sub> y</sub> ---> T<sub>o</sub> (T<sub>o</sub> y)
+ T<sub>o</sub> y   (T<sub>o</sub><sup>2</sup> (T<sub>o</sub> y)) ---- mu<sub>T<sub>o</sub> y</sub> -----> T<sub>o</sub> (T<sub>o</sub> y)
    
 
 lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
