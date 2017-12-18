@@ -340,7 +340,14 @@ f |      (T<sub>o</sub> (T<sub>o</sub> f))                     T<sub>o</sub> f
   |         |                             |
   v         v                             v
  T<sub>o</sub> y   (T<sub>o</sub><sup>2</sup> (T<sub>o</sub> y)) ---- mu<sub>T<sub>o</sub> y</sub> -----> T<sub>o</sub> (T<sub>o</sub> y)
-   
+            .
+            .
+            .
+            .  (associativity of functor composition)
+            .
+            .
+            v
+  T<sub>o</sub> (T<sub>o</sub><sup>2</sup> y)  ------ T<sub>m</sub> mu<sub>y</sub> ---------> T<sub>o</sub> (T<sub>o</sub> y)        
 
 lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f)))
     = mu<sub>d</sub> . T<sub>m</sub> h . mu<sub>c</sub> . T<sub>m</sub> g . f
