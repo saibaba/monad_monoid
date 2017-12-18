@@ -369,7 +369,7 @@ But, our equations above use T<sub>m</sub> mu<sub>d</sub> for the bottom leg whe
 uses mu<sub>T<sub>o</sub> d</sub>.
 
 So, we have to add additional condition that mu<sub>T<sub>o</sub> d</sub> = T<sub>m</sub> mu<sub>d</sub> which is
-achieved endofunctor composition (bifunctor).
+achieved by endofunctor composition (bifunctor).
 
 
 A sample in Haskell:
