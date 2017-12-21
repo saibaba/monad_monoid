@@ -491,6 +491,8 @@ So, the most important ingredients in understanding monads: endofunctor composit
 
 Notice that all in all, the associativity (and left/right unitor) of endofunctor composition directly translates to associativity of various operators like <=>, bind, or whatever else you define.
 
+And, basically a monad gives ability to chain together or compose functions in using a more complex algorithm (each monad having its own algorithm) that are usually not composable just through type compatibility. See State monad for an example of elaborate algorithm.
+
 Introduction
 -------------
 
