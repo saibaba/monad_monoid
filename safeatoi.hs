@@ -15,7 +15,6 @@ stringToNumber s =
           1 -> Just (fst (r!!0))
           otherwise -> Nothing
 
-
 mjoin :: Maybe (Maybe a) -> Maybe a
 mjoin (Just (Just v)) = Just v
 mjoin (Just Nothing) = Nothing
