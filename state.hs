@@ -64,7 +64,7 @@ stepGame s x =
 playGame :: String -> State GameState GameValue
 playGame []     = return 'd'
 playGame (x:xs) =
-  get             `bind` (\state ->
+  get                    `bind` (\state ->
   put (stepGame state x) `bind` (\_ ->
   playGame xs))
 
