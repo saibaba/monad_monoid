@@ -74,7 +74,7 @@ playGame :: String -> State GameState GameValue
 playGame []     = mreturn 'd'
 playGame (x:xs) =
   get                `mbind` (\a ->    -- here a is actually 'state' as that's what get does, returns state as value
-  put (stepGame a x) `mbind` (\_ ->        -- we do not care about return value
+  put (stepGame a x) `mbind` (\_ ->    -- we do not care about return value
   playGame xs))
 
 startState = (False, 0)
