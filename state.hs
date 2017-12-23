@@ -1,9 +1,11 @@
 -- a great explanation in http://brandon.si/code/the-state-monad-a-tutorial-for-the-confused/
-
-import Prelude hiding(return)
+--
+-- Following two are for understanding deeper details
+-- https://stackoverflow.com/questions/35349159/haskell-join-on-state-monad
+--https://www.packtpub.com/mapt/book/application_development/9781786461353/5/ch05lvl1sec43/writing-a-state-monad
 
 -- Q: What is a state: A state is something like the current values of mutable fields of an object in OOPL
--- Q: What is a state function: a function that takes a current state, and returns an intermediate value and a new state
+-- Q: What is a state function: a function that takes current state, and returns an intermediate value and a new state
 -- Q: How ? \state -> (intermediate_value, new_state)
 -- Q: Example, please? Consider current state, a counter, c. If the counter is divisible by 5, create a value "foo" else create a value "bar" and return  c+1 as new state in either case.
 -- Q: What the heck is this "intermediate value". It is probably not used half the time. But, if there is a case where generating next state depends on this intermediate value, it could be used.
@@ -24,7 +26,7 @@ stateIntString = State fromStoAandS
 
 -- runState together wrapping function instead of state helps to postpone entire execution of state transitions - you want it for example, if you want to call the "composite set of transitions" recursively for smaller values.
 
-return a = State $ \s -> (a, s) -- this is essentially (,) :: a -> b -> (a, b)
+mreturn a = State $ \s -> (a, s) -- this is essentially (,) :: a -> b -> (a, b)
 
 -- Q: How do we support composing two state updates? Of course, bind
 
@@ -36,11 +38,18 @@ into
 
 --}
 
-bind m k =
-  State $ \s -> let (a, s') = runState m s
-                 in runState (k a) s'
+mfmap f (State h) =
+  State $ \s -> let (xa, s1) = h s
+                in  (f xa, s1)
 
--- note that evaluState, execState, get and put are defined as global functions as newtype allows for only one function in its declaration which is used by runState.
+mjoin :: State s (State s a) -> State s a
+mjoin outer = State $ \s ->
+  let (inner, s') = runState outer s
+  in  runState inner s'
+
+mbind mv mf = mjoin $ mfmap mf mv
+
+-- note that evalState, execState, get and put are defined as global functions as newtype allows for only one function in its declaration which is used by runState.
 --
 evalState state s = fst (runState state s)
 execState state s = snd (runState state s)
@@ -62,10 +71,10 @@ stepGame s x =
                 _        -> (on, score)
 
 playGame :: String -> State GameState GameValue
-playGame []     = return 'd'
+playGame []     = mreturn 'd'
 playGame (x:xs) =
-  get                    `bind` (\state ->
-  put (stepGame state x) `bind` (\_ ->
+  get                    `mbind` (\state ->
+  put (stepGame state x) `mbind` (\_ ->
   playGame xs))
 
 startState = (False, 0)
