@@ -493,6 +493,8 @@ Notice that all in all, the associativity (and left/right unitor) of endofunctor
 
 And, basically a monad gives ability to chain together or compose functions in using a more complex algorithm (each monad having its own algorithm) that are usually not composable just through type compatibility. See State monad for an example of elaborate algorithm.
 
+Also, sometimes join is not just about removing one level of indirection introduced, but might have to do some computation. Again, it is a good idea to study State monad (implemented using join and fmap instead of bind) to understand this at a deeper level. See the 'state.hs' for this.
+
 Introduction
 -------------
 
