@@ -49,7 +49,7 @@ mjoin outer = State $ \s ->
 
 mbind mv mf = mjoin $ mfmap mf mv
 
--- note that evalState, execState, get and put are defined as global functions as newtype allows for only one function in its declaration which is used by runState.
+-- note that evalState, execState, get, and put are defined as global functions as newtype allows for only one function in its declaration which is used by runState.
 --
 evalState state s = fst (runState state s)
 execState state s = snd (runState state s)
@@ -73,8 +73,8 @@ stepGame s x =
 playGame :: String -> State GameState GameValue
 playGame []     = mreturn 'd'
 playGame (x:xs) =
-  get                    `mbind` (\state ->
-  put (stepGame state x) `mbind` (\_ ->
+  get                `mbind` (\a ->    -- here a is actually 'state' as that's what get does, returns state as value
+  put (stepGame a x) `mbind` (\_ ->        -- we do not care about return value
   playGame xs))
 
 startState = (False, 0)
