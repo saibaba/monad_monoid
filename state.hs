@@ -79,6 +79,20 @@ playGame (x:xs) =
 
 startState = (False, 0)
 
+
+-- Plain vanilla state function composition
+plainGet = \_ -> \s -> (s, s)
+plainPut = \s -> \_ -> ((), s)
+compose g f a =
+  \s -> let (b, s') = f a s
+            (c, s'') = g b s'
+        in  (c, s'')
+
+playGamePlain [] = \s -> ('d', s)
+playGamePlain (x:xs) = compose (\_ -> playGamePlain xs) ( compose (\a ->  plainPut (stepGame a x) ) plainGet) 'd'
+
 main = do
   print $ execState (playGame "abcaaacbbcabbab") startState
   print $ runState (playGame "aaacaaa") (snd (runState (playGame "abcaaacbbcabbab") startState))
+  print $ playGamePlain "abcaaacbbcabbab" startState
+  print $ (playGamePlain "aaacaaa") (snd ( (playGamePlain "abcaaacbbcabbab") startState))
