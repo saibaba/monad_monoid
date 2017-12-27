@@ -51,3 +51,4 @@ Ref
 * http://lambda-the-ultimate.org/node/2448
 * https://math.stackexchange.com/questions/523906/show-that-function-compositions-are-associative
 * https://www.quora.com/What-is-the-purpose-of-identity-morphisms-in-category-theory
+* https://en.wikipedia.org/wiki/Monad_(functional_programming)

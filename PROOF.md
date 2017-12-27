@@ -784,6 +784,8 @@ join:: m (m a) -> m a
 join mma = bind mma id
 </pre>
 
+For more identities, see: https://en.wikipedia.org/wiki/Monad_(functional_programming)#fmap_and_join
+
 Now do the same with composition of Kleisli arrows (>=>). Because, these is where you see "associativity" in action:
 
 (f >=> g) >=> h ≡ f >=> (g >=> h)
