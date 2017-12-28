@@ -52,3 +52,5 @@ Ref
 * https://math.stackexchange.com/questions/523906/show-that-function-compositions-are-associative
 * https://www.quora.com/What-is-the-purpose-of-identity-morphisms-in-category-theory
 * https://en.wikipedia.org/wiki/Monad_(functional_programming)
+* http://members.chello.nl/hjgtuyl/tourdemonad.html (various monad related apis in Haskell  and how to use them with examples)
+* The Haskell Programmer's Guide to the IO Monad (Don't Panic) has wealth of information : horizontal composition; transformation vs. naturality condition; kleisli star = point-free version of bind; 
