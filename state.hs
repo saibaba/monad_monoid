@@ -81,6 +81,7 @@ startState = (False, 0)
 
 
 -- Plain vanilla state function composition
+-- Also, see http://www.engr.mun.ca/~theo/Misc/haskell_and_monads.htm
 plainGet = \_ -> \s -> (s, s)
 plainPut = \s -> \_ -> ((), s)
 compose g f a =
