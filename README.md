@@ -887,11 +887,14 @@ Side Bar 4
 ----------
 
 Consider horizontal compisition:
+
 <img src="https://github.com/saibaba/monad_monoid/blob/master/horizcomp.png" width="600" />
 
 Specialized with one category and one functor only:
+
 <img src="https://github.com/saibaba/monad_monoid/blob/master/horiz_specialize.png" width="600" />
 
 Now define monad:
+
 <img src="https://github.com/saibaba/monad_monoid/blob/master/monad.png" width="600" />
 
