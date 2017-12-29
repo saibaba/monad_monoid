@@ -517,7 +517,7 @@ Given a morphism f: a->b
 
 Consider a natural transformation α::F->G and its components like α<sub>a</sub> :: F a -> G a.
 
-α<sub>b</sub> . F<sub>m</sub> f = G<sub>m</sub> . α<sub>a</sub>
+α<sub>b</sub> . F<sub>m</sub> f = G<sub>m</sub> f . α<sub>a</sub>
 
 </pre>
 
