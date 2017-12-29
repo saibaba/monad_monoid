@@ -748,6 +748,8 @@ List them and prove them.
 
 So, "A monad is a monoid in the category of endofunctors".
 
+A pure categorical definition of Monad is available in a sidebar.
+
 
 Side Bar 1
 ----------
@@ -880,4 +882,16 @@ Prove the same using join instead of bind:
 bind f = join . fmap f
 
 </pre>
+
+Side Bar 4
+----------
+
+Consider horizontal compisition:
+<img src="https://github.com/saibaba/monad_monoid/blob/master/horizcomp.png" width="600" />
+
+Specialized with one category and one functor only:
+<img src="https://github.com/saibaba/monad_monoid/blob/master/horiz_specialize.png" width="600" />
+
+Now define monad:
+<img src="https://github.com/saibaba/monad_monoid/blob/master/monad.png" width="600" />
 
