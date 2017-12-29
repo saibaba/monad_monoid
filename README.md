@@ -885,6 +885,13 @@ bind f = join . fmap f
 
 Side Bar 4
 ----------
+What is the difference between transformation and natural transformation?
+
+
+<img src="https://github.com/saibaba/monad_monoid/blob/master/trans_vs_nat_trans.png" width="600" />
+
+Side Bar 5
+----------
 
 Consider horizontal compisition:
 
