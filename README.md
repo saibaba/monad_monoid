@@ -897,7 +897,9 @@ Consider horizontal compisition:
 
 <img src="https://github.com/saibaba/monad_monoid/blob/master/horizcomp.png" width="600" />
 
-Specialized with one category and one functor only:
+Proof that ηE and Hη are both natural transformations is available in HaskellProgrammerGuideToIOMonad.
+
+Now, specialize above diagram with one category and one functor only:
 
 <img src="https://github.com/saibaba/monad_monoid/blob/master/horiz_specialize.png" width="600" />
 
