@@ -38,8 +38,7 @@ f2 o f3 = (2 x + 1)^2 + (2 x + 1) + 2
 and so on...
 </pre>
 
-Don't you wish you had the same level of flexibility when writing programs? Like, below where each function could continue
-the flow or terminate prematurely due to various conditions?
+Don't you wish you had the same level of flexibility when writing programs? Like, below where each function could continue the flow or terminate prematurely due to various conditions?
 
 <pre>
 wordCount = map (head &&& length) . group . sort . words . map toLower
@@ -64,6 +63,8 @@ wordCount = map (head &&& length) . group . ( (\l -> dynamically_figure_out_sort
 </pre>
 
 Or any of these combinations depending on situation.
+
+Basically, we want the ability to compose functions not by just type compatibility but through complex means that could be determined either at compile or at runtime while still maintaining the associativity of the composition.
 
 Enter monads...
  
