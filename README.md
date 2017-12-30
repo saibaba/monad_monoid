@@ -907,3 +907,20 @@ Now define monad:
 
 <img src="https://github.com/saibaba/monad_monoid/blob/master/monad.png" width="600" />
 
+Here,
+
+Either select a component and then lift by T:
+
+<pre>
+μ<sub>a</sub> : T<sub>o</sub><sup>2</sup> a -> T a
+
+T<sub>m</sub> μ<sub>a</sub> : T<sub>o</sub> (T<sub>o</sub><sup>2</sup> a) -> T<sub>o</sub> (T<sub>o</sub> a)
+</pre>
+
+Or
+
+Lift an object, and select component of lifted object:
+
+<pre>
+μ<sub>T<sub>o</sub> a</sub> : T<sub>o</sub><sup>2</sup> (T<sub>o</sub> a) -> T<sub>o</sub> (T<sub>o</sub> a)
+</pre>
