@@ -64,7 +64,7 @@ wordCount = map (head &&& length) . group . ( (\l -> dynamically_figure_out_sort
 
 Or any of these combinations depending on situation.
 
-Basically, we want the ability to compose functions not by just type compatibility but through complex means that could be determined either at compile or at runtime while still maintaining the associativity of the composition.
+Basically, we want the ability to compose functions (essence of functional programming) not by just type compatibility but through complex means that could be determined either at compile or at runtime while still maintaining the associativity of the composition.
 
 Enter monads...
  
@@ -372,7 +372,7 @@ You can see all of above pictorially here:
 
 The red and green paths differ between T<sub>o</sub><sup>2</sup> c and T<sub>o</sub><sup>2</sup> d.
 
-Naturality (blue path) allows us to prove that this is a commutating square.
+Naturality (blue path) allows us to prove that this is a commuting square.
 
 But, our equations above use T<sub>m</sub> mu<sub>d</sub> for the bottom leg where as naturality 
 uses mu<sub>T<sub>o</sub> d</sub>.
