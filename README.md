@@ -593,6 +593,8 @@ Functor composition
 
 </pre>
 
+Note that compiler validates this mechanically only at the type level. Programmer has to still make sure that associativity is true semantically in implementation.
+
 Monoidal Category
 -----------------
 
@@ -676,8 +678,7 @@ Lifting of above two by endofunctor composition creates a new mapping:
   To be super accurate, we have to use components of α, and β.
 </pre>
  
-Note that above also means that the function resulted out of <strong>lifed functions (bimap)</strong> is nothing but 
-the horizontal composition of natural transformations, α and β. For example,
+Note that above also means that the function resulted out of <strong>lifed functions (bimap)</strong> is nothing but the horizontal composition of natural transformations, α and β. For example,
 
 <pre>
 
