@@ -911,7 +911,7 @@ Now define monad:
 
 Here,
 
-Either select a component and then lift by T:
+For an object, 'a', either select a natural component and then lift this morphism by T:
 
 <pre>
 μ<sub>a</sub> : T<sub>o</sub><sup>2</sup> a -> T a
@@ -919,9 +919,7 @@ Either select a component and then lift by T:
 T<sub>m</sub> μ<sub>a</sub> : T<sub>o</sub> (T<sub>o</sub><sup>2</sup> a) -> T<sub>o</sub> (T<sub>o</sub> a)
 </pre>
 
-Or
-
-Lift an object, and select component of lifted object:
+Or lift the object 'a', and select a natural component of the lifted object:
 
 <pre>
 μ<sub>T<sub>o</sub> a</sub> : T<sub>o</sub><sup>2</sup> (T<sub>o</sub> a) -> T<sub>o</sub> (T<sub>o</sub> a)
