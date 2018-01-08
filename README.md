@@ -910,9 +910,29 @@ Horizontal composition is defined as:
   Let τ  : S  -> T
       τ' : S' -> T'
  
-  τ' ∘ τ = T'<sub>m</sub> τ<sub>c</sub> . τ'<sub>S<sub>o</sub> c</sub>
-         = τ'<sub>T<sub>o</sub> c</sub> . S'<sub>m</sub> τ<sub>c</sub>
+  τ' ∘ τ = T'<sub>m</sub> τ<sub>c</sub> . τ'<sub>S<sub>o</sub> c</sub>     Eqn-1
+         = τ'<sub>T<sub>o</sub> c</sub> . S'<sub>m</sub> τ<sub>c</sub>     Eqn-2
 </pre>
+
+Above horizontal composition is itself a natural transformation (see page 42 of Categories For the working mathematician for a proof).
+
+Above can be restated using a combination of horizontal and vertical compositions. For example, above can be written as:
+
+<pre>
+  τ' ∘ τ = (T' ∘ τ) . (τ' ∘ S) 
+         = (τ' ∘ T) . (S' ∘ τ)
+</pre>
+
+<pre>
+Proof of τ' ∘ τ = (T' ∘ τ) . (τ' ∘ S) 
+
+  T' τ<sub>c</sub> = Id<sub>T'<sub>o</sub>T<sub>o</sub> c</sub> . T' τ<sub>c</sub>
+                   = I<sup>T'</sup><sub>T<sub>o</sub>c </sub> . T' τ<sub>c</sub>
+                   = I<sup>T'</sup><sub>T<sub>o</sub>c </sub> ∘ τ<sub>c</sub>        (in comparison with Eqn-2)
+
+
+</pre>
+
 
 
 Side Bar 6
