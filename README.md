@@ -966,6 +966,7 @@ Proof of τ' ∘ τ = (τ' ∘ T) . (S' ∘ τ)
 
 </pre>
 
+Then there is interchange law. See 'interchange.hs' to play with it.
 
 Side Bar 6
 ----------
