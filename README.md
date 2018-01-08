@@ -975,7 +975,7 @@ Consider horizontal composition:
 
 <img src="https://github.com/saibaba/monad_monoid/blob/master/horizcomp.png" width="600" />
 
-Proof that ηE and Hη are both natural transformations is available in HaskellProgrammerGuideToIOMonad.
+Proof that ηE and Hη are both natural transformations is available in HaskellProgrammerGuideToIOMonad. Anyways, this is a special case of proofs in previous section about horizontal composition.
 
 Now, specialize above diagram with one category and one functor only:
 
