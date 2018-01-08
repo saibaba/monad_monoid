@@ -937,6 +937,12 @@ Proof of τ' ∘ τ = (T' ∘ τ) . (τ' ∘ S)
          = τ'<sub>S<sub>o</sub> c</sub> . S'<sub>m</sub> (Id<sub>S<sub>o</sub> c</sub>)
          = τ'<sub>S<sub>o</sub> c</sub> . S'<sub>m</sub> I<sub>c</sub><sup>S</sup>
          = τ'<sub>S<sub>o</sub> c</sub> ∘ I<sub>c</sub><sup>S</sup>        (in comparison with Eqn-2)
+
+  So,
+
+  τ' ∘ τ = T'<sub>m</sub> τ<sub>c</sub> . τ'<sub>S<sub>o</sub> c</sub>     (from Eqn-1)
+         = (I<sup>T'</sup><sub>T<sub>o</sub>c </sub> ∘ τ<sub>c</sub>) . (τ'<sub>S<sub>o</sub> c</sub> ∘ I<sub>c</sub><sup>S</sup>)
+
 </pre>
 
 
