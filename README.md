@@ -912,6 +912,7 @@ Horizontal composition is defined as:
  
   τ' ∘ τ = T'<sub>m</sub> τ<sub>c</sub> . τ'<sub>S<sub>o</sub> c</sub>     Eqn-1
          = τ'<sub>T<sub>o</sub> c</sub> . S'<sub>m</sub> τ<sub>c</sub>     Eqn-2
+
 </pre>
 
 Above horizontal composition is itself a natural transformation (see page 42 of Categories For the working mathematician for a proof).
@@ -925,8 +926,6 @@ Above can be restated using a combination of horizontal and vertical composition
 
 <pre>
 Proof of τ' ∘ τ = (T' ∘ τ) . (τ' ∘ S) 
-
- 
 
   T' τ<sub>c</sub> = Id<sub>T'<sub>o</sub>T<sub>o</sub> c</sub> . T' τ<sub>c</sub>
          = I<sup>T'</sup><sub>T<sub>o</sub>c </sub> . T' τ<sub>c</sub>
@@ -945,6 +944,27 @@ Proof of τ' ∘ τ = (T' ∘ τ) . (τ' ∘ S)
 
 </pre>
 
+Likewise,
+
+<pre>
+Proof of τ' ∘ τ = (τ' ∘ T) . (S' ∘ τ) 
+
+  S' τ<sub>c</sub> = S' τ<sub>c</sub> . Id<sub>S'<sub>o</sub>S<sub>o</sub> c</sub>
+         = S' τ<sub>c</sub> . I<sup>S'</sup><sub>S<sub>o</sub>c </sub>
+         = I<sup>S'</sup><sub>S<sub>o</sub>c </sub> ∘ τ<sub>c</sub>        (in comparison with Eqn-1)
+
+
+  τ'<sub>T<sub>o</sub> c</sub> = τ'<sub>T<sub>o</sub> c</sub> . Id<sub>S'<sub>o</sub>T<sub>o</sub> c</sub>
+         = τ'<sub>T<sub>o</sub> c</sub> . S'<sub>m</sub> (Id<sub>T<sub>o</sub> c</sub>)
+         = τ'<sub>T<sub>o</sub> c</sub> . S'<sub>m</sub> I<sub>c</sub><sup>T</sup>
+         = τ'<sub>T<sub>o</sub> c</sub> ∘ I<sub>c</sub><sup>T</sup>        (in comparison with Eqn-2)
+
+  So,
+
+  τ' ∘ τ = τ'<sub>T<sub>o</sub> c</sub> . S'<sub>m</sub> τ<sub>c</sub>     (from Eqn-2)
+         = (τ'<sub>T<sub>o</sub> c</sub> ∘ I<sub>c</sub><sup>T</sup>) . (I<sup>S'</sup><sub>S<sub>o</sub>c </sub> ∘ τ<sub>c</sub>)
+
+</pre>
 
 
 Side Bar 6
