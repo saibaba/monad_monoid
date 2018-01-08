@@ -913,6 +913,8 @@ Horizontal composition is defined as:
   τ' ∘ τ = T'<sub>m</sub> τ<sub>c</sub> . τ'<sub>S<sub>o</sub> c</sub>     Eqn-1
          = τ'<sub>T<sub>o</sub> c</sub> . S'<sub>m</sub> τ<sub>c</sub>     Eqn-2
 
+  (note that this definition corresponds to bifunctor map, bimap defined elsewhere in this document!)
+
 </pre>
 
 Above horizontal composition is itself a natural transformation (see page 42 of Categories For the working mathematician for a proof).
