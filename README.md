@@ -78,7 +78,7 @@ If F is a functor, F<sub>o</sub> maps an object from the source category to targ
 
 .   is composition in a category.
 
-∘   is functor composition, sometime, just juxtaposition.
+∘   is functor composition, sometime, just juxtaposition. This is also used for horizontal composition.
 
 ⊗   bifunctor.
 
@@ -895,7 +895,30 @@ What is the difference between transformation and natural transformation?
 Side Bar 5
 ----------
 
-Consider horizontal compisition:
+Some notes on horizontal composition:
+
+First note that natural transformations can be composed with each other. Since, however, transformations map objects to morphisms —instead of, e.g., objects to objects— they can not be simply applied one after another. Instead, composition is defined com- ponent wise, also called vertical composition.
+
+And by defining a complex rule of composition instead of usual ".", natural transformations can be composed with each other, called horizontal composition.
+
+<pre>
+Horizontal composition is defined as:
+  Let C, B, A be 3 categories.
+  Functors S, T: C -> B
+  Functors S', T': B -> A
+
+  Let τ  : S  -> T
+      τ' : S' -> T'
+ 
+  τ' ∘ τ = T'<sub>m</sub> τ<sub>c</sub> . τ'<sub>S<sub>o</sub> c</sub>
+         = τ'<sub>T<sub>o</sub> c</sub> . S'<sub>m</sub> τ<sub>c</sub>
+</pre>
+
+
+Side Bar 6
+----------
+
+Consider horizontal composition:
 
 <img src="https://github.com/saibaba/monad_monoid/blob/master/horizcomp.png" width="600" />
 
