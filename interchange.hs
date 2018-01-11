@@ -11,7 +11,7 @@ type Natural f g = forall a. f a -> g a  -- functor to functor mapping
 --  (nat2' . nat1') horizcomp (nat2 . nat1) = (nat2' horizcomp nat2) vertcomp (nat1' horizcomp nat1)
 
 {-
-      
+ 
     -----  f ----->    ------ f' ----->
           ||                   ||
           || t                 ||  s
@@ -35,10 +35,54 @@ then s x =>  g' (f c)
 then fmap t is of type ::  g' f c -> g' g c due to fmap resolving to fmap of g'
 then fmap t (s x) = g' (g c)
 hence another way is : fmap t (s x)
+-}
 
-  s (fmap t x)
+{-
 
- -}
+Here is a quick proof of interchange law:
+
+ 
+    -----  F ----->    ------  F' ----->
+          ||                   ||
+          || a                 ||  a'
+          ||                   ||
+          \/                   \/ 
+    ----  G  ----->    ------  G' ----->
+          ||                   ||
+          || b                 ||  b'
+          ||                   ||
+          \/                   \/ 
+    ----  H  ----->    ------  H' ----->
+
+Create a diagram show casing the naturality of a, a', b and b' (natural transformations):
+
+     --------------- F' (b . a) ----------------->       
+                                                        |
+    F'F----- F' a -----> F'G  ------ F' b ----->F'H     |
+     | \                  |                      |      |
+     |  \                 |                      |      |
+    a'-F \__ a' o a __   a'-G                   a'-H    |
+     |                \   |                      |      |
+     |                 \  |                      |      |
+     v                  \ v                      v      |
+    G'F ---- G' a ---->  G'G  ------ G' b ----->G'H   (b' . a')-H
+     |                    | \                    |      |
+     |                    |  \                   |      |
+    b'-F                b'-G  \___ b' o b ___   b'-H    | 
+     |                    |                   \  |      |
+     v                    v                    \ v      |
+    H'F ---- H' a ---->  H'G  ------ H' b ----->H'H
+
+
+All squares are commutative (due to naturality on a, a', b, b').
+=> Outer square is commutative
+
+Diagonally going source of arrow (b' o b) = target of arrow (a' o a) hence normal composition = (b' o b) . (a' o a)
+Above diagonal result is equal to going from either side  =  (b' . a')-H . F' (b . a) = (b' . a') o (b . a)
+
+(b' o b) . (a' o a) =  (b' . a') o (b . a)
+
+-}
 
 o,o' :: (Functor f, Functor f', Functor g, Functor g') => Natural f' g' -> Natural f g -> (forall c. f' (f c) -> g' (g c))
 
