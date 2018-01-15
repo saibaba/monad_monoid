@@ -1,6 +1,7 @@
 --http://blog.sigfpe.com/2008/05/interchange-law.html
+-- (see if it can be improved based on this http://www.stephendiehl.com/posts/adjunctions.html)
+{-# LANGUAGE RankNTypes #-}
 
-{-# OPTIONS -fglasgow-exts -fno-warn-missing-methods #-}
 import Test.QuickCheck
 import Control.Monad.Writer
 
@@ -11,34 +12,41 @@ type Natural f g = forall a. f a -> g a  -- functor to functor mapping
 --  (nat2' . nat1') horizcomp (nat2 . nat1) = (nat2' horizcomp nat2) vertcomp (nat1' horizcomp nat1)
 
 {-
- 
-    -----  f ----->    ------ f' ----->
-          ||                   ||
-          || t                 ||  s
-          ||                   ||
-          \/                   \/ 
-    ----  g  ----->    ------ g' ----->
+
+f, f', g, g' are functors.
+t: f -> g and s: f' -> g' are  natural transformations.
+
+    -----  f ----->    ------ f' ----->                   -----  f' f ------->
+   /      ||       \ /        ||       \                /         ||           \
+  H       || t      H         || s      H   horizcomp  H          ||  s o t     H
+  \       ||       / \        ||        /              \          ||           /
+   \      \/      /   \       \/       /                \         \/          /
+    ----  g  ----->    ------ g' ----->                   -----  g' g -------> 
 
 H = Hask
 
-Definition of horizcomp:
+Definition of horizontal composition:
 
 Let x be f' (f c):
-then in 'fmap t x', fmap will be resolve to fmap of f'
-then t will be lifted to: f' (f c) -> f' (g c)
-so, if apply result to s, it returns g' (g c).
-hence one way  is s (fmap t x) 
-
+Then in 'fmap t x', fmap will be resolve to fmap of f'
+So t will be lifted to: f' (f c) -> f' (g c)
+So, since s : f' -> g', applying argument (fmap t x) to s returns g' (g c).
+Hence one way to define implementation of horizcomp is : s (fmap t x) 
 
 Let x be f' (f c):
-then s x =>  g' (f c)
-then fmap t is of type ::  g' f c -> g' g c due to fmap resolving to fmap of g'
-then fmap t (s x) = g' (g c)
-hence another way is : fmap t (s x)
+Then 's x' resolves to  g' (f c).
+Then fmap t is of type ::  g' f c -> g' g c due to fmap resolving to fmap of g'
+Then fmap t (s x) = g' (g c)
+Hence another way to define the implementation of horizcomp is  : fmap t (s x)
+
 -}
 
-{-
+o,o' :: (Functor f, Functor f', Functor g, Functor g') => Natural f' g' -> Natural f g -> (forall c. f' (f c) -> g' (g c))
 
+o s t x = s (fmap t x)
+o' s t x = fmap t (s x)
+
+{-
 Here is a quick proof of interchange law:
 
  
@@ -54,7 +62,7 @@ Here is a quick proof of interchange law:
           \/                   \/ 
     ----  H  ----->    ------  H' ----->
 
-Create a diagram show casing the naturality of a, a', b and b' (natural transformations):
+Create a diagram show-casing the naturality of a, a', b and b' (natural transformations):
 
      --------------- F' (b . a) ----------------->       
                                                         |
@@ -73,6 +81,10 @@ Create a diagram show casing the naturality of a, a', b and b' (natural transfor
      v                    v                    \ v      |
     H'F ---- H' a ---->  H'G  ------ H' b ----->H'H
 
+Notice that F' b . F' a = F' (b . a) = F' o (b . a).
+This is due to whiskering. Note that the last F' is not a functor but its Identity natural transformation).
+
+Also, notice that b'-H . a'-H = (b' . a')-H
 
 All squares are commutative (due to naturality on a, a', b, b').
 => Outer square is commutative
@@ -83,12 +95,6 @@ Above diagonal result is equal to going from either side  =  (b' . a')-H . F' (b
 (b' o b) . (a' o a) =  (b' . a') o (b . a)
 
 -}
-
-o,o' :: (Functor f, Functor f', Functor g, Functor g') => Natural f' g' -> Natural f g -> (forall c. f' (f c) -> g' (g c))
-
-o s t x = s (fmap t x)
-o' s t x = fmap t (s x)
-
 -- Now some functors to play with. we need 4: Pair, Id, Maybe, []
 
 {-
