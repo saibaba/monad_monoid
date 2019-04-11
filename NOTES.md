@@ -55,3 +55,4 @@ Ref
 * http://members.chello.nl/hjgtuyl/tourdemonad.html (various monad related apis in Haskell  and how to use them with examples)
 * The Haskell Programmer's Guide to the IO Monad (Don't Panic) has wealth of information : horizontal composition; transformation vs. naturality condition; kleisli star = point-free version of bind; 
 * Category Theory For the Sciences, Theorem 5.3.2.20 (Interchange)
+* https://arxiv.org/pdf/1405.3073.pdf (Categories from scatch - references seem to be good)
