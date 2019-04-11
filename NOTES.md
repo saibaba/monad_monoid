@@ -56,3 +56,4 @@ Ref
 * The Haskell Programmer's Guide to the IO Monad (Don't Panic) has wealth of information : horizontal composition; transformation vs. naturality condition; kleisli star = point-free version of bind; 
 * Category Theory For the Sciences, Theorem 5.3.2.20 (Interchange)
 * https://arxiv.org/pdf/1405.3073.pdf (Categories from scatch - references seem to be good)
+* Nice explanation of functor in category thy vs prog lang: https://cs.stackexchange.com/questions/9769/what-is-the-relation-between-functors-in-sml-and-category-theory
