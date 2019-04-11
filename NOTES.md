@@ -24,7 +24,7 @@ Two things to keep in mind:
   - A functor is a way of operating on the content of something without touching the structure.
   - A natural transformation is a way of operating on the structure of something without touching or looking at the content.
 
-The dirty details are spelled out in https://github.com/saibaba/monad_monoid/blob/master/PROOF.md.
+The dirty details are spelled out in https://github.com/saibaba/monad_monoid/blob/master/README.md.
 
 Ref
 ==
