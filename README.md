@@ -1,6 +1,10 @@
 Statements
 ----------
 
+Experiments to understand: "A monad is just a monoid in the category of endofunctors, what's the probleⅿ?"
+
+See NOTES.md as well.
+
 Endofunctor category with functor composition as bifunctor is a (strict) monoidal category.
 
 A monad in category C is a monoid in the category of endofunctors of C where product is the composition of endofunctors and unit is identity endofunctor.
