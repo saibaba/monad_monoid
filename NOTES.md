@@ -29,6 +29,7 @@ The dirty details are spelled out in https://github.com/saibaba/monad_monoid/blo
 Ref
 ==
 
+* Great introduction to categories: http://people.math.harvard.edu/~mazur/preprints/when_is_one.pdf
 * Comprehending Monads - P. Wadler
 * https://stackoverflow.com/questions/3870088/a-monad-is-just-a-monoid-in-the-category-of-endofunctors-whats-the-proble%E2%85%BF
 * http://w.pitula.me/2016/monad-proof/
