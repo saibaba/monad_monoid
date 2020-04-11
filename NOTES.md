@@ -58,3 +58,4 @@ Ref
 * Category Theory For the Sciences, Theorem 5.3.2.20 (Interchange)
 * https://arxiv.org/pdf/1405.3073.pdf (Categories from scatch - references seem to be good)
 * Nice explanation of functor in category thy vs prog lang: https://cs.stackexchange.com/questions/9769/what-is-the-relation-between-functors-in-sml-and-category-theory
+* Great learning resource on category theory: http://katmat.math.uni-bremen.de/acc/acc.pdf
