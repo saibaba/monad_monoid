@@ -62,3 +62,4 @@ Ref
 * Great learning resource on category theory: http://katmat.math.uni-bremen.de/acc/acc.pdf
 * https://www.quora.com/What-is-the-difference-between-type-constructor-and-a-functor-in-Haskell (nice stuff on contra/covariant)
 * Naturality follows from parametricity: https://bartoszmilewski.com/2014/09/22/parametricity-money-for-nothing-and-theorems-for-free/
+* Function is a functor: https://eli.thegreenplace.net/2018/haskell-functions-as-functors-applicatives-and-monads/#id7
