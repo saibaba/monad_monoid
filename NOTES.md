@@ -60,3 +60,4 @@ Ref
 * https://arxiv.org/pdf/1405.3073.pdf (Categories from scatch - references seem to be good)
 * Nice explanation of functor in category thy vs prog lang: https://cs.stackexchange.com/questions/9769/what-is-the-relation-between-functors-in-sml-and-category-theory
 * Great learning resource on category theory: http://katmat.math.uni-bremen.de/acc/acc.pdf
+* https://www.quora.com/What-is-the-difference-between-type-constructor-and-a-functor-in-Haskell (nice stuff on contra/covariant)
