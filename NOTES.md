@@ -29,6 +29,7 @@ The dirty details are spelled out in https://github.com/saibaba/monad_monoid/blo
 Ref
 ==
 
+* Nice example of natural transformation and an example where it does not apply: https://stackoverflow.com/a/58364169 (another one comes to mind, you have a stream of Employee objects and stream is in the order of tenure- you built a generic function to handle the stream, generic in the sense does not know it is holding Employee objects - your boss suddenly tells to increase salary by 10% for first x employees, the generic function now does not work as it does not know that it is holding Employee objects, you have to make it to type specific to access/update salary field of Employee - you break natural transformation)
 * Great introduction to categories: http://people.math.harvard.edu/~mazur/preprints/when_is_one.pdf
 * Comprehending Monads - P. Wadler
 * https://stackoverflow.com/questions/3870088/a-monad-is-just-a-monoid-in-the-category-of-endofunctors-whats-the-proble%E2%85%BF
