@@ -63,3 +63,4 @@ Ref
 * https://www.quora.com/What-is-the-difference-between-type-constructor-and-a-functor-in-Haskell (nice stuff on contra/covariant)
 * Naturality follows from parametricity: https://bartoszmilewski.com/2014/09/22/parametricity-money-for-nothing-and-theorems-for-free/
 * Function is a functor: https://eli.thegreenplace.net/2018/haskell-functions-as-functors-applicatives-and-monads/#id7
+* An example of transformation that is not natural: https://math.stackexchange.com/questions/2772832/non-natural-transformation-example. A sample code is in trans_not_natural.cpp.
