@@ -1,0 +1,194 @@
+Comma bifunctor, comma and two categories C, D: CxD
+  (,)
+ 
+  on objects  a, c belong to C; b, d belong to D
+  comma a b = (a, b)   
+  comma c d = (c, d)
+
+  on functions f: a->c: C, g:b->d :D
+  comma f g :: (a,c) -> (c,d)
+
+  with identity, preserving composition.
+
+Create unary functors from comma:
+
+  (A, _) where A belongs to C
+  (_, B) where B belongs to D
+ 
+  let f:A->A':C
+      g:B->B':D
+
+  (A, _) is a functor from D to CxD taking object x from x to (A, x)
+  (_, B)  is a functor from C to CxD taking object y from y to (y, B)
+
+  What about morphisms?
+
+  We have f and g.
+ 
+  What does (f, g) mean? 
+
+  All we know is F: _ x B is a functor.
+     [Objs 
+         F A = (A, B)
+         F A' = (A', B)
+         F A''  (A'', B)
+      Morphisms
+         F f  = (f, B) 
+         F f' = (f', B)
+         F f'' = (f'', B)
+      Composition
+        f' . f: A -> A'': C
+        F  (f' . f) = F f' . F f = (f', B) . (f, B) = ( (f' . f ), B)
+     ]
+
+  All we know is G: A x _ 
+     [objs
+         G B  = (A, B)
+         G B' = (A, B')
+         G B'' = (A, B'')
+      Morphisms
+         G g = (A, g)
+         G g' = (A, g')
+         G g'' = (A, g'')
+      Composition
+         g' . g : B -> B'' : D
+         G (g' . g) = G g' . G g = (A, g') . (A, g) = (A, g' . g)
+     ]
+
+  Define morphism as:
+
+  How do we define composition of unary functors: F and G, say into H ?
+
+  Let's define as:
+  H takes A and B to (A, B)
+  H A B = F A  = G B  (two valid definitions)
+
+  Let f: A -> A' : C
+      g: B -> B' : D
+
+  Also, F f  = (f, B) and
+        G g  = (A, g)
+
+  (A, B) ----- (f, B) -----> (A', B)
+    |                          |
+    |                          |
+  (A, g)                     (A', g)
+    |                          |
+    |                          |
+    v                          v
+  (A, B') ----- (f, B') ----->(A', B')
+ 
+  So, we can take H f g =  (f, B') . (A, g) = (A', g) . (f, B) (two valid definitions, we use 2nd one arbitrarily in subsequent discussion)   ----- (1)
+ 
+  Identity is preserved, what about composition? 
+
+  Does this  definition of H respect composition law? We need to prove:
+
+  H (f'.f) (g'.g) = H f' g' . H f g      ----- (2)
+
+  Consider f:A -> A': C, f': A' -> A'': C
+  and      g:B ->B': D, g': B' -> B'' : D
+
+  From defn of H f g  and also noticing that use of A'' because f'f:A->A''
+
+  H (f'.f) (g'.g) = (A'', (g'.g)) . ((f'.f), B)
+
+  But, 
+    (A'', (g'.g)) = (A'', g') . (A'', g) 
+    ((f'.f), B) = (f', B) . (f. B)
+
+
+  So, LHS of (2) 
+  H (f'.f) (g'.g) = (A'', g') . (A'', g) . (f', B) . (f. B)
+
+  And RHS of (2)
+  H f' g' . H f g =   (A'', g') . (f', B')  . (A', g) . (f, B)
+
+  So, we need to guarantee that :
+
+  (A'', g') . (A'', g) . (f', B) . (f. B) = (A'', g') . (f', B')  . (A', g) . (f, B)
+
+  Equivalently
+
+  (A'', g) . (f', B) = (f', B')  . (A', g)
+
+
+  (A, B) ----- (f, B) -----> (A', B)  ----- (f’, B) -----> (A’’, B)
+    |                          |                             |
+    |                          |                             |
+  (A, g)                    (A', g)                       (A’’, g)
+    |                          |                             |
+    |                          |                             |
+    v                          v                             v
+  (A, B') ----- (f, B') ----->(A', B') ----- (f’, B') ——>(A’’, B')
+
+
+--------------
+
+Functor Application:
+
+Category C, D:
+Category DC:
+   objects = functors from C to D
+   morphisms = alpha, beta  (what are they)
+
+
+functor application:
+
+  Take a functor from DC and an objedct from C and result of applying the functor on the object is an object in D
+  
+
+  DC x C -> D
+
+  Above is bifunctor!
+  Needs to satisfy coherence condition!
+
+  Consider functors B, B' etc. in C,  and object A, A', etc. in D
+  And morphisms f, f', etc in C and g, g'.. in D
+
+   B A ------  B f -------->  B A'  ----- B f’ -----> B A’’
+    |                          |                       |
+    |                          |                       |
+* (A, g)                  * (A', g)                * (A’’, g)
+    |                          |                       |
+    |                          |                       |
+    v                          v                       v
+  B' A ------  B' f ----->  B' A' ----- B' f' -----> B' A’’
+
+
+[* (A’’, g)] . B f' = B' f' . [* (A', g)]
+
+Anyways, what the heck is *?
+
+For easy understanding replace B = F, B' = G ...
+g, g' = alpha, beta ...
+A, A', A'' = a, b, c ...
+f, f', ... = f, g, h
+
+
+f: a->b
+g: b->c
+
+
+   F a ------  F f -------->  F b  ----- F g -----> F c
+    |                          |                     |
+    |                          |                     |
+* (a, alpha)             * (b, alpha)          * (c, alpha)
+    |                          |                     |
+    |                          |                     |
+    v                          v                     v
+  G a ------- G f -------->  G b ------- G g ------> G c
+
+[* (c, alpha)] . F g = G g . [* (b, alpha)]
+simplifying notation, * (c, alpha) to alpha-c for example:
+
+alpha-c . F g = G g . alpha-b
+
+or even
+
+G f . alpha-a = alpha-b . F f 
+
+We have done all these without even knowing the imnplementation of alpha !
+
+This is nothing but the naturality condition while alpha is a natural transformation.
+

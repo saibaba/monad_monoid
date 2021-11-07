@@ -27,6 +27,7 @@ instance Monoid Integer where
 
 law1_lhs :: (Monoid m) => m -> m
 law1_lhs = mappend . (one <#> id) . lambda
+law1_middle = id
 
 (f <#> g) (x, y) =  (f x, g y)
 
@@ -64,7 +65,10 @@ test_law2 = do
   -- mappend . (id 2, mappend (3, 4)) = mappend . (2, 3 * 4) = 2 * (3 * 4)
 
 check1 = quickCheck $ \n -> mappend (one (),  n :: Integer) == n
+check2 = quickCheck $ \n -> law1_lhs n == law1_middle (n :: Integer)
 
 main = do
   print test_law1
   print test_law2
+  check1
+  check2

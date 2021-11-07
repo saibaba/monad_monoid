@@ -1,6 +1,7 @@
 -- http://blog.sigfpe.com/2008/11/from-monoids-to-monads.html
 -- Also see 6.1 of Category Theory Applied to Functional Programming
-
+-- and of course this : https://bartoszmilewski.com/2016/12/27/monads-categorically/
+--
 {-# LANGUAGE TypeOperators #-}
 
 import Prelude hiding(Monoid, mappend)
