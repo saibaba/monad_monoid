@@ -1006,3 +1006,56 @@ Or lift the object 'a', and select a natural component of the lifted object:
 <pre>
 μ<sub>T<sub>o</sub> a</sub> : T<sub>o</sub><sup>2</sup> (T<sub>o</sub> a) -> T<sub>o</sub> (T<sub>o</sub> a)
 </pre>
+
+
+Side Bar 7
+----------
+
+More on transformation vs. natural transformation  (side bar 4):
+
+Let C = { N, S, B }    where N = integers, S = strings, B = booleans
+F = vector
+G = Maybe
+
+Let D = { vector[N], Maybe[N], vector[S], Maybe[S] ... }
+
+Let T be place holder for an obect of C.
+
+Let η = safeHead (::vector[T] -> Maybe[T] or F T -> G T).
+
+For each object in C, we can index into η to get a morphism in D, η<sub>T</sub>. Hence η is a transformation.
+
+Also, let's code it like this:
+
+η<sub>N</sub> = { return Just 5 }
+η<sub>S</sub> = { if input vector<string> is empty, return Nothing else, return Just <first element> }
+
+Consider these 2 arbitrary morphisms in C:
+f = inc  (in C, from N to N)
+g = show (in C, from every element of C to S)
+
+Consider two examples:
+
+First:
+
+safeHead<sub>N</sub> o fmap<sub>vector</sub> vs.  fmap<sub>Maybe</sub> f  o safeHead<sub>N</sub>
+
+
+Second:
+
+safeHead<sub>S</sub> o fmap<sub>vector</sub> vs.  fmap<sub>Maybe</sub> g o safeHead<sub>N</sub>
+
+
+In both examples, the LHS vs. RHS do not match.
+
+So, safeHead as defined above is not a natural transformation.
+
+The core issue is that safeHead is able to peek into the type (N) and apply a different algorithm.
+
+This is possible in C++ due to adhoc polymorphism (specialize a generic template function for a specific type like integer).
+
+
+(Draw picture of categories involved for visualization)
+
+An example in trans_not_natural2.cpp
+
