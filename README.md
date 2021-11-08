@@ -526,8 +526,24 @@ Consider a natural transformation α::F->G and its components like α<sub>a</sub
 
 </pre>
 
+Functor category [C, D] or Fun(C, D) or D<sup>C</sup>.
+----------------------
+
+<pre>
+  Objects: functors like F: C-> D, G: C->D
+  Morphisms: components of natural transformations, mu<sub>a</sub>, eta<sub>a</sub>, ...
+  Composition: morphisms i.e., components of natural transformations compose as usual (vertical composition of natural transformations)
+  Associativity: Composition is associative as it just normal function composition of morphisms(compoents of natural transformations).
+  Identity: Identity natural transformation, I is the identity morphism.
+</pre>
+
+
 Endofunctor category [C,C]
 --------------------------
+
+It is basically, functor category from a category to the same, i.e., [C, C].
+
+
 
 <pre>
   Objects: endofunctors like F, G above

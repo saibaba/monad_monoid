@@ -65,3 +65,4 @@ Ref
 * Function is a functor: https://eli.thegreenplace.net/2018/haskell-functions-as-functors-applicatives-and-monads/#id7
 * An example of transformation that is not natural: https://math.stackexchange.com/questions/2772832/non-natural-transformation-example. A sample code is in trans_not_natural.cpp.
 * An extended example of transformation that is not natural: trans_not_natural2.cpp.
+* Nice notes on natural transformations: https://pages.cs.wisc.edu/~jcyphert/categoryTheoryNotes/basics/3_NaturalTransformations.pdf
