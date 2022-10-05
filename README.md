@@ -70,6 +70,15 @@ Or any of these combinations depending on situation.
 
 Basically, we want the ability to compose functions (essence of functional programming) not by just type compatibility but through complex means that could be determined either at compile or at runtime while still maintaining the associativity of the composition.
 
+For example, we want it to be impossible to write a function `detect` that can detect in what order the functions are composed:
+
+```
+detect ((f . g) . h) = True
+detect (f . (g . h)) = False
+```
+
+(ref: https://www.reddit.com/r/haskell/comments/13vqlc/comment/c77n6cp/?utm_source=share&utm_medium=web2x&context=3)
+
 Enter monads...
  
 Legend
