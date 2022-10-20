@@ -126,7 +126,7 @@ T<sub>m</sub> g :: T<sub>o</sub> b -> T<sub>o</sub><sup>2</sup> c
 
 But, now you have to get rid of T<sub>o</sub><sup>2</sup>.
 
-What we need is a function:
+What we need is a (generic) function (generic function, works for all parameters, a natural transformation):
 <pre>
 mu: T<sub>o</sub><sup>2</sup> -> T<sub>o</sub>
 or its instantiations (components or indexing by object):
@@ -540,9 +540,9 @@ Functor category [C, D] or Fun(C, D) or D<sup>C</sup>.
 
 <pre>
   Objects: functors like F: C-> D, G: C->D
-  Morphisms: components of natural transformations, mu<sub>a</sub>, eta<sub>a</sub>, ...
+  Morphisms: natural transformations, mu, eta, ...
   Composition: morphisms i.e., components of natural transformations compose as usual (vertical composition of natural transformations)
-  Associativity: Composition is associative as it just normal function composition of morphisms(compoents of natural transformations).
+  Associativity: Composition is associative as it just normal function composition of morphisms(i.e., natural transformations).
   Identity: Identity natural transformation, I is the identity morphism.
 </pre>
 
@@ -556,9 +556,9 @@ It is basically, functor category from a category to the same, i.e., [C, C].
 
 <pre>
   Objects: endofunctors like F, G above
-  Morphisms: components of natural transformations, mu<sub>a</sub>, eta<sub>a</sub>, ...
+  Morphisms: natural transformations, mu, eta, ...
   Composition: morphisms i.e., components of natural transformations compose as usual (vertical composition of natural transformations)
-  Associativity: Composition is associative as it just normal function composition of morphisms(compoents of natural transformations).
+  Associativity: Composition is associative as it just normal function composition of morphisms(i.e., natural transformations).
   Identity: Identity natural transformation, I is the identity morphism.
 </pre>
 
@@ -631,7 +631,7 @@ A monoidal category has an extra <strong>structure</strong> on top of a regular 
 
 The way this is done is via a functor, called bifunctor.
 
-Think of bifunctor taking two objects and returning another object all from the same category. For example it can take two objects and return a pair (assuming all pairs are also in the category). Another example is composite functor (one inside another like Maybe [] or [Maybe].
+Think of bifunctor taking two objects and returning another object all from the same category. For example it can take two objects and return a pair (assuming all pairs are also in the category). Another example is composite functor (one inside another like Maybe [] or [Maybe]). In both cases we have a functor from a domain which is a product of categories and range is another category. All being the same category in the discussion below.
 
 This is represented using ⊗.
 
@@ -652,6 +652,24 @@ Since it is a functor, it takes two  morphisms and returns a new arrow (again, o
 
 f  ⊗ g is of type <strong>a ⊗ b -> c ⊗ d</strong> where f: a-> c and g : b -> d.
 </pre>
+
+Why is this called `monoid(al)`?
+* Notice that a monoid is a structure with a binary operation (like addition/multiplication or something like above ⊗) from two objects of a set (like C X C above) to the same set (like C) above. 
+* The operation is also associative.
+* In monoidal category defined above, operation not strictly associate, but only upto a natural isomorphism by 3 natural (isomorphic) transformations:
+** $\alpha_{A, B, C}$ = (A ⊗ B) ⊗ C -> A ⊗ (B ⊗ C). This is an arrow from functor to functor. Each is a functor because it is an arrow from (an object in a) category to  (an object in a) category. Both sides of arrow are not strictly equivalent, but upto natural isomorphism.
+** $\lambda_{A}$ = 1 ⊗ A -> A. This is also an arrow from functor to functor (identity functor?).
+** $\rho_{A}$ A ⊗ 1 -> A. 
+** The 3 arrors also satisfy naturality condition:  Say we have an arrow f:$A_1\rightarrow A_2 in \mathcal{C}$. Then we can apply it either before or after $\lambda: \lambda_{A_2}\circ(1_\mathbf{1}\otimes f)=f\circ\lambda_{A_1}$ as arrows from $\mathbf{1}\otimes A_1 to A_2$.
+
+See more on these rules here: https://unapologetic.wordpress.com/2007/06/28/monoidal-categories/
+
+So, being a bifunctor, ⊗ operates on each $C_o x C_o$ (product) to produce an object in $C_o$. By definition, it is a functor as it maps both $C_o$ and $C_m$. So, each object, M ($\in C$) in a monoidal category satisfies:
+* $\mu: M ⊗ M -> M$  (Notice it is same object M used as two arguments and resulting the same object again - a single object monoid)
+* $\eta: I -> M$
+
+(Here M can be something like Maybe with C = Endofunctors(HASK). Another example is List).
+
 
 Endofunctor composition is a bifunctor
 --------------------------------------
@@ -924,7 +942,7 @@ What is the difference between transformation and natural transformation?
 Side Bar 5
 ----------
 
-Some notes on horizontal composition:
+Some notes on horizontal composition (a natural transformation from composite functor to another composite functor):
 
 First note that natural transformations can be composed with each other. Since, however, transformations map objects to morphisms —instead of, e.g., objects to objects— they can not be simply applied one after another. Instead, composition is defined com- ponent wise, also called vertical composition.
 
@@ -945,6 +963,8 @@ Horizontal composition is defined as:
   (note that this definition corresponds to bifunctor map, bimap defined elsewhere in this document!)
 
 </pre>
+
+The key point with horizontal transformation is that we are looking for a natural transformation from (composite) functor (S'.S) to (T'.T). And there are two actually: With $a \in C$, it can be (a) $T'_m τ_a$ . $τ'_{S_o a}$ or (b)  $τ'_{T_o a} . $S'_m (τ_a)$.  And fortunately due to naturality, they are equal.
 
 Above horizontal composition is itself a natural transformation (see page 42 of Categories For the working mathematician for a proof).
 
