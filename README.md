@@ -964,7 +964,7 @@ Horizontal composition is defined as:
 
 </pre>
 
-The key point with horizontal transformation is that we are looking for a natural transformation from (composite) functor (S'.S) to (T'.T). And there are two actually: With $a \in C$, it can be (a) $T'_m τ_a$ . $τ'_{S_o a}$ or (b)  $τ'_{T_o a} . $S'_m (τ_a)$.  And fortunately due to naturality, they are equal.
+The key point with horizontal transformation is that we are looking for a natural transformation from (composite) functor (S'.S) to (T'.T). And there are two actually: With $a \in C$, it can be (a) T'<sub>m</sub> τ<sub>a</sub>. τ'<sub>S<sub>o</sub>a</sub> or (b)  τ'<sub>T<sub>o</sub>a</sub> . S'<sub>m</sub> (τ<sub>a</sub>).  And fortunately due to naturality, they are equal.
 
 Above horizontal composition is itself a natural transformation (see page 42 of Categories For the working mathematician for a proof).
 
