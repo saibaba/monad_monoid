@@ -66,3 +66,6 @@ Ref
 * An example of transformation that is not natural: https://math.stackexchange.com/questions/2772832/non-natural-transformation-example. A sample code is in trans_not_natural.cpp.
 * An extended example of transformation that is not natural: trans_not_natural2.cpp.
 * Nice notes on natural transformations: https://pages.cs.wisc.edu/~jcyphert/categoryTheoryNotes/basics/3_NaturalTransformations.pdf
+* https://gist.github.com/programaker/7f36e6c454d0894a9368f99ff4208eeb
+* What is one use of Kleisli composition? In monadic programming it is equivalent of point-free style: https://www.quora.com/In-Haskell-programming-language-what-are-some-practical-uses-of-Kleisli-composition
+* Seeing horizontal composition simply as a bifunctor: https://www.reddit.com/r/haskell/comments/5bwuh5/comment/d9s0b48/?utm_source=share&utm_medium=web2x&context=3 (taking 2 natural transformations in the input, returning horizontal composition as output, which is nothing but the natural transformation from composite functor to another composite functor). Study it in conjunction with: https://bartoszmilewski.com/2016/12/27/monads-categorically/

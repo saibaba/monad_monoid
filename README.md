@@ -1019,6 +1019,8 @@ Proof of τ' ∘ τ = (τ' ∘ T) . (S' ∘ τ)
 
 Then there is interchange law. See 'interchange.hs' to play with it.
 
+See this: https://www.reddit.com/r/haskell/comments/5bwuh5/comment/d9s0b48/?utm_source=share&utm_medium=web2x&context=3
+
 Side Bar 6
 ----------
 
