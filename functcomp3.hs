@@ -1,6 +1,6 @@
 {-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE FlexibleInstances #-}   -- https://stackoverflow.com/questions/44359466/create-instance-for-list-of-data-types-haskell
 
--- Functor composition can be realized using existing bifunctor
 
 -- Functor composition has two parts:
 -- part 1: compose objects (E.g., MaybeList or ListMaybe and so on..)
@@ -9,27 +9,20 @@
 --         same two functors.
 --
 
-class BiFunctor f where
-  bimap :: (a->c) -> (b->d) -> f a b -> f c d
-  first :: (a->c) -> f a b -> f c b 
-  first g = bimap g id
-  second :: (b->d) -> f a b -> f a d
-  second  = bimap id
-  bimap g h = first g . second h
-
-
-newtype ListOfMaybe a = ListOfMaybe [Maybe a]
-
-instance BiFunctor ListOfMaybe where
-  bimap f g = f . g
+data ListOfMaybe a = MkListOfMaybe [Maybe a] deriving (Show)
 
 instance Functor ListOfMaybe where
-  fmap f = bimap fmap (fmap . f)
+  -- Notice how there are two functions utlilized: "fmap", and "fmap . f"
+  fmap f (MkListOfMaybe l_m_a) = MkListOfMaybe (fmap (fmap f) l_m_a) -- bimap fmap (fmap . f)
 
+lm = MkListOfMaybe [Just (1::Int), Nothing, Just (2::Int)]
 
-lm = [Just (1::Integer), Nothing, Just (2::Integer)]
-
-test1 = (+1) $ ListOfMaybe [Just 10, Nothing, Just 20]
+test1 = fmap (+1) lm
 
 main = do
-  print test1
+  print "Before applying function to composite functor"
+  putStrLn $ show lm
+  print "After applying function to composite functor"
+  putStrLn $ show test1
+
+-- Functor composition can be realized using existing bifunctor, but that is a story for later (here objects are composite functors and morphisms are natural transformation from composite functor to another composite functor - horizontal composition of natural transformation of each component functor)
