@@ -69,3 +69,9 @@ Ref
 * https://gist.github.com/programaker/7f36e6c454d0894a9368f99ff4208eeb
 * What is one use of Kleisli composition? In monadic programming it is equivalent of point-free style: https://www.quora.com/In-Haskell-programming-language-what-are-some-practical-uses-of-Kleisli-composition
 * Seeing horizontal composition simply as a bifunctor: https://www.reddit.com/r/haskell/comments/5bwuh5/comment/d9s0b48/?utm_source=share&utm_medium=web2x&context=3 (taking 2 natural transformations in the input, returning horizontal composition as output, which is nothing but the natural transformation from composite functor to another composite functor). Study it in conjunction with: https://bartoszmilewski.com/2016/12/27/monads-categorically/
+* https://miklos-martin.github.io/learn/fp/2016/03/10/monad-laws-for-regular-developers.html
+* https://evinsellin.medium.com/teaching-monads-slightly-differently-2af62c4af8ce
+* https://www.cs.cmu.edu/~crary/819-f09/Moggi91.pdf
+* Monad laws in haiku: "Kleisli composition forms a category": https://wiki.haskell.org/Monad_laws
+* https://stackoverflow.com/questions/34398239/with-monads-can-join-be-defined-in-terms-of-bind
+* https://math.stackexchange.com/questions/2101774/elaboration-for-%CE%BC-%E2%88%98t%CE%BC-%CE%BC-%E2%88%98-%CE%BCt-from-a-monad-definition
