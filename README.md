@@ -1118,10 +1118,10 @@ So, we have a naturality square:
 
 <pre>
                       T μ<sub>c</sub>
-    T(T<sup>2</sup>c) = T<sup>2</sup>c    ---------------->  T (Tc) = T<sup>2</sup>c
+    T<sup>2</sup>(Tc) = T(T<sup>2</sup>c)            ---------------->  T (Tc) = T<sup>2</sup>c
             |                            |
             |                            |
-            | μ<sub>Tc</sub>                        | μ<sub>c</sub>
+            | μ<sub>Tc</sub>                         | μ<sub>c</sub>
             |                            |
             |                            |
             v                            v
@@ -1142,5 +1142,6 @@ Observe:
 (μ ∘ Tμ)<sub>c</sub> = (μ ∘ μT)<sub>c</sub>
 (μ ∘ Tμ) = (μ ∘ μT) (both sides are vertical composition of natural transformations, and hence natural transformations themselves).
 
+One thing missing is how  T<sup>2</sup>(Tc) = T(T<sup>2</sup>c) is formed. What is required for that to happen?
 
 
