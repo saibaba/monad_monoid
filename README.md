@@ -1121,11 +1121,11 @@ So, we have a naturality square:
     T<sup>2</sup>(Tc) = T(T<sup>2</sup>c) ---------------->  T (Tc) = T<sup>2</sup>c
             |                            |
             |                            |
-            | μ<sub>Tc</sub>                         | μ<sub>c</sub>
+            | μ<sub>Tc</sub>                        | μ<sub>c</sub>
             |                            |
             |                            |
             v                            v
-    T(T<sup>2</sup>c) = T<sup>2</sup>c    ---------------->  T (Tc) = T<sup>2</sup>c
+    T(Tc) = T<sup>2</sup>c               ---------------->  T (Tc) = T<sup>2</sup>c
                           μ<sub>c</sub>
 </pre>
 
