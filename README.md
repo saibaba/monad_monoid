@@ -1138,10 +1138,11 @@ Observe:
 * Tμ is also a natural transformation. Why? It is a horizontal composition of 1<sub>T</sub> and μ.
 * μ<sub>T</sub> is also a natural transformation. Why? It is a horizontal composition of μ and 1<sub>T</sub>.
 * So, we can extract out c from above equation and remove it.
+* Functor composition is associative, so T<sup>2</sup>(Tc) = T(T<sup>2</sup>c)
  
 (μ ∘ Tμ)<sub>c</sub> = (μ ∘ μT)<sub>c</sub>
 (μ ∘ Tμ) = (μ ∘ μT) (both sides are vertical composition of natural transformations, and hence natural transformations themselves).
 
-One thing missing is how  T<sup>2</sup>(Tc) = T(T<sup>2</sup>c) is formed. What is required for that to happen?
 
+(https://math.stackexchange.com/questions/2101774/elaboration-for-%CE%BC-%E2%88%98t%CE%BC-%CE%BC-%E2%88%98-%CE%BCt-from-a-monad-definition)
 
