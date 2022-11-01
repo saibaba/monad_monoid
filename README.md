@@ -1116,8 +1116,8 @@ And μ<sub>a</sub> is a morphism in C, so T can lift it (T can lift only morphis
 
 So, we have a naturality square:
 
-                                           T μ<sup>c</sup>
 <pre>
+                                           T μ<sub>c</sub>
     T(T<sup>2</sup>c) = T<sup>2</sup>c    ---------------->  T (Tc) = T<sup>2</sup>c
             |                                                            |
             |                                                            |
@@ -1126,7 +1126,7 @@ So, we have a naturality square:
             |                                                            |
             v                                                            v
     T(T<sup>2</sup>c) = T<sup>2</sup>c    ---------------->  T (Tc) = T<sup>2</sup>c
-                                            μ<sup>c</sup>
+                                            μ<sub>c</sub>
 </pre>
 
 Above, being a naturality square, commutes:
