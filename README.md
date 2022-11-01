@@ -1165,6 +1165,8 @@ Bullet point 3:
 
 (The Tc component of μ is taken here, as the input coming to it is Tc)
 
+μ<sub>T</sub> ~ 1<sub>T</sub> = μ<sub>T</sub> = μT
+
 <pre>
    T     T<sup>2</sup>
   ---->   ------>
