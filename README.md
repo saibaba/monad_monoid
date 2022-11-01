@@ -1117,14 +1117,14 @@ And μ<sub>a</sub> is a morphism in C, so T can lift it (T can lift only morphis
 So, we have a naturality square:
 
                                            T μ<sup>c</sup>
-    T(T<sup>2</sup>c) = T<sup>2</sup>c    ---------------->  T (Tc) = T<sup>2</sup>c
-            |                                                            |
-            |                                                            |
-            | μ<sub>Tc</sub>                                             | μ<sub>c</sub>
-            |                                                            |
-            |                                                            |
-            v                                                            v
-    T(T<sup>2</sup>c) = T<sup>2</sup>c    ---------------->  T (Tc) = T<sup>2</sup>c
+T(T<sup>2</sup>c) = T<sup>2</sup>c    ---------------->  T (Tc) = T<sup>2</sup>c
+        |                                                            |
+        |                                                            |
+        | μ<sub>Tc</sub>                                             | μ<sub>c</sub>
+        |                                                            |
+        |                                                            |
+        v                                                            v
+T(T<sup>2</sup>c) = T<sup>2</sup>c    ---------------->  T (Tc) = T<sup>2</sup>c
                                             μ<sup>c</sup>
 
 μ<sub>c</sub> ∘ Tμ<sub>c</sub> = μ<sub>c</sub> ∘  μ<sub>Tc</sub>
