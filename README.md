@@ -1139,6 +1139,45 @@ Observe:
 * μ<sub>T</sub> is also a natural transformation. Why? It is a horizontal composition of μ and 1<sub>T</sub>.
 * So, we can extract out c from above equation and remove it.
 * Functor composition is associative, so T<sup>2</sup>(Tc) = T(T<sup>2</sup>c)
+
+Using ~ for horiz. comp:
+
+Bullet point 2:
+
+1<sub>T</sub> ~ T μ = T μ
+
+(The c component of μ is taken here as the input coming to it is c)
+
+<pre>
+   T<sup>2</sup>     T
+  ---->   ------>
+    |        |
+    |        |
+    μ       1<sub>T</sub>
+    |        |
+    v        v
+  ---->   ------>
+    T        T
+</pre>
+
+
+Bullet point 3:
+
+(The Tc component of μ is taken here, as the input coming to it is Tc)
+
+<pre>
+   T     T<sup>2</sup>
+  ---->   ------>
+    |        |
+    |        |
+  1<sub>T</sub>    μ<sub>T</sub>
+    |        |
+    v        v
+  ---->   ------>
+    T        T
+</pre>
+
+So, finally:
  
 (μ ∘ Tμ)<sub>c</sub> = (μ ∘ μT)<sub>c</sub>
 (μ ∘ Tμ) = (μ ∘ μT) (both sides are vertical composition of natural transformations, and hence natural transformations themselves).
