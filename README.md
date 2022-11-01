@@ -1106,3 +1106,37 @@ This is possible in C++ due to adhoc polymorphism (specialize a generic template
 
 An example in trans_not_natural2.cpp
 
+Side Bar 8
+----------
+
+Elaboration for μ ∘ Tμ = μ ∘ μT:
+
+First note that μ: T<sup>2</sup> -> T is a natural transformation.
+And μ<sub>a</sub> is a morphism in C, so T can lift it (T can lift only morphisms not natural transformations)
+
+So, we have a naturality square:
+
+                                           T μ<sup>c</sup>
+    T(T<sup>2</sup>c) = T<sup>2</sup>c    ---------------->  T (Tc) = T<sup>2</sup>c
+            |                                                            |
+            |                                                            |
+            | μ<sub>Tc</sub>                                             | μ<sub>c</sub>
+            |                                                            |
+            |                                                            |
+            v                                                            v
+    T(T<sup>2</sup>c) = T<sup>2</sup>c    ---------------->  T (Tc) = T<sup>2</sup>c
+                                            μ<sup>c</sup>
+
+μ<sub>c</sub> ∘ Tμ<sub>c</sub> = μ<sub>c</sub> ∘  μ<sub>Tc</sub>
+
+Observe:
+* μ is a natural transformation
+* Tμ is also a natural transformation. Why? It is a horizontal composition of 1<sub>T</sub> and μ.
+* μ<sub>T</sub> is also a natural transformation. Why? It is a horizontal composition of μ and 1<sub>T</sub>.
+* So, we can extract out c from above equation and remove it.
+ 
+(μ ∘ Tμ)<sub>c</sub> = (μ ∘ μT)<sub>c</sub>
+(μ ∘ Tμ) = (μ ∘ μT) (both sides are vertical composition of natural transformations, and hence natural transformations themselves).
+
+
+
