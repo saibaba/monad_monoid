@@ -1,3 +1,5 @@
+-- https://www.quora.com/What-is-a-state-monad
+-- https://stackoverflow.com/questions/52379685/how-to-derive-a-state-monad-from-first-principles?rq=1
 -- a great explanation in http://brandon.si/code/the-state-monad-a-tutorial-for-the-confused/
 --
 -- Following two are for understanding deeper details
@@ -15,7 +17,7 @@ fromStoAandS :: Int -> (String, Int)
 fromStoAandS state | state `mod` 5 == 0 = ("foo", state+1)
                    | otherwise  = ("bar", state+1)
 -- Q: What is State Monad? just place holder for state function to enable monadic operations (creating new, combining state function)
---
+-- A State object does not store a state. It stores a "change of state". https://stackoverflow.com/questions/57374143/understanding-the-state-monad
 
 newtype State s a = State { runState :: s -> (a,s) }
 

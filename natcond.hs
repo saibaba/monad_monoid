@@ -49,6 +49,20 @@ Abstracting safeHead = alpha
 
 -}
 
+{-
+The above naturality condition automatically holdes in HASK. Why?
+
+    
+By definition of functor we already know that fmap exists for all functions (f above).
+
+Since the polymorphic functions (like safeHead above) are created for all objects (types like Integer, String), 
+the alpha component is created for every object/type. Hence we get commutative diagram for each arrow/function.
+
+
+
+
+-}
+
 safeHead :: [a] -> Maybe a
 safeHead [] = Nothing
 safeHead (x:xs) = Just x

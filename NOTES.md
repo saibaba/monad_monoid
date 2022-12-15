@@ -26,6 +26,22 @@ Two things to keep in mind:
 
 The dirty details are spelled out in https://github.com/saibaba/monad_monoid/blob/master/README.md.
 
+Free theorem:
+
+"Haskell's parametric polymorphism has an unexpected consequence: any polymorphic function of the type:
+
+alpha :: F a -> G a
+"where F and G are functors, automatically satisfies the naturality condition."
+
+This is true, but assumes that the F and G themselves honor (by the developer) functor laws:
+
+The requirement of compatibility with the actions of the functors is not expressible as a type signature, so we require it as a law:
+(https://blog.merovius.de/posts/2018-01-08-monads-are-just-monoids/#fn:6)
+
+f :: a->b
+
+alpha_b . fmap_F f = fmap_G f . alpha_a
+
 Ref
 ==
 
@@ -75,3 +91,15 @@ Ref
 * Monad laws in haiku: "Kleisli composition forms a category": https://wiki.haskell.org/Monad_laws
 * https://stackoverflow.com/questions/34398239/with-monads-can-join-be-defined-in-terms-of-bind
 * https://math.stackexchange.com/questions/2101774/elaboration-for-%CE%BC-%E2%88%98t%CE%BC-%CE%BC-%E2%88%98-%CE%BCt-from-a-monad-definition
+* https://stackoverflow.com/questions/68070620/is-it-possible-for-a-non-io-monad-to-violate-associativity-in-haskell
+* http://ku-fpg.github.io/files/Sculthorpe-13-ConstrainedMonad.pdf
+* https://jeltsch.wordpress.com/2013/02/14/the-constraint-kind/
+* https://www.schoolofhaskell.com/user/edwardk/snippets/fmap
+* https://github.com/quchen/articles/blob/master/second_functor_law.md
+* Question about monad associativity law: http://lambda-the-ultimate.org/node/2448
+* https://stackoverflow.com/questions/3322540/how-and-why-does-the-haskell-cont-monad-work
+* See https://en.wikipedia.org/wiki/Monad_(functional_programming)#Usage for good comparison with other common constructs used by programmers all the time.
+* Viewing monad as overridable semicolon: https://stackoverflow.com/a/12264535
+* Lots of good references in the lecture notes here: https://www.csc.kth.se/utbildning/kth/kurser/2D1456/avfunk07/view.php?arg=lectures.h&m=1
+* Something very interesting going on with propsition on page 7 of https://math.uchicago.edu/~may/VIGRE/VIGRE2007/REUPapers/FINALAPP/Jerzak.pdf (equivalence between product category and natural transformation). It is saying you can write alpha (for example safehead) without knowing anything the objects of C (for example HASK).
+* https://cs.stackexchange.com/questions/119777/functor-laws-and-natural-transformations-in-haskell

@@ -79,8 +79,20 @@ detect (f . (g . h)) = False
 
 (ref: https://www.reddit.com/r/haskell/comments/13vqlc/comment/c77n6cp/?utm_source=share&utm_medium=web2x&context=3)
 
+Sure, what is the problem, then? Well with "." we are safe, it is universal operator operating on pure functions and not overloaded based on function type. All it matters that the input/output (types)  of functions being composed must match. We are able to compose any functions without knowing about them (their implementation). So "." is polymorphic.
+
+But, we do not live in pure world, we need functions that do different things based on the value, not type: For example Maybe or Either or List (empty vs. non-empty case) and so on. Here, the composition is not based on type but kleisli <=< as input and outputs of the functions being composed do not match. And this operator is not polymorphic.
+
+Still, what is the problem? Well, the composition of defined for the abstract data type T holding an object (like T in a -> T b) can define how the composition happens (via <=< operator that is being used to compose). For example see [this reference](https://stackoverflow.com/a/68075895). Also, different developers compose the same conditional logic differently (for example see monad_laws_assoc.hs and monad_laws_right_identity.hs).
+
+
+So, we cannot expect the system to automatically do it, but rely on the developer to follow certain rules. What exactly are they (hint: monad laws) that we want the developer guarantee?
+
 Enter monads...
- 
+
+( we need monadic associativity which can be defined in the form of equivalence of horizontal compositions 1 and mu or mu and 1). Note that the haskell Functor does not enforce associativity of functor composition, so just by requiring that Monad is a subclass of Functor is not enough. We (developer) still have to guarantee Monad laws. There is no Functor composition concept in HASK, we usually create our own Compose for it.  In math things are easy: if a construct does not follow monad laws, we just delcare that it is not monad. But in haskell, if an instance of Monad is created and bind is implemented for it (and not associative), we just can't automatically declare it as not being monadic. It still has implemented Monad typeclass contract (from the functions and their signature perspective).
+
+
 Legend
 ------
 
@@ -372,7 +384,8 @@ lhs = mu<sub>d</sub> . (T<sub>m</sub> h . (mu<sub>c</sub> . (T<sub>m</sub> g . f
                                                       and functor presevers composition ]
     = mu<sub>d</sub> . T<sub>m</sub> ( mu<sub>d</sub> . T<sub>m</sub> h . g) . f          [functor preserves composition]
     = rhs
- 
+
+(see also, https://math.stackexchange.com/questions/3392882/how-to-show-the-associativity-in-kleisli-category) 
 So, to prove it we leveraged mu<sub>T<sub>o</sub> x</sub> = T<sub>m</sub> mu<sub>x</sub> which requires Tx(TxT) = (TxT)xT.
 
 </pre>
@@ -829,7 +842,11 @@ bind :: (Monad m) => m a -> (a -> m b) -> m b
 bind mv mf = join $ fmap mf mv
 </pre>
 
-<strong>join</strong>  using <strong>bind</strong>:
+Interesting thing to note about bind (>>=) is that a can be anything including another Counter.
+And in this case, if function passed is id, that enclosed Counter can be simply extracted as it honors the `Counter b` restriction.
+This is exactly join does.
+
+<strong>join</strong> using <strong>bind</strong>:
 <pre>
 join:: m (m a) -> m a
 join mma = bind mma id
@@ -1184,6 +1201,7 @@ So, finally:
 (μ ∘ Tμ)<sub>c</sub> = (μ ∘ μT)<sub>c</sub>
 (μ ∘ Tμ) = (μ ∘ μT) (both sides are vertical composition of natural transformations, and hence natural transformations themselves).
 
+Basically, this law means that for all a, T<sup>2</sup>T -> T<sup>2</sup> -> T or TT<sup>2</sup> -> T<sup>2</sup> -> T always lead to T when operated on by  Tμ or μT.
 
 (https://math.stackexchange.com/questions/2101774/elaboration-for-%CE%BC-%E2%88%98t%CE%BC-%CE%BC-%E2%88%98-%CE%BCt-from-a-monad-definition)
 
