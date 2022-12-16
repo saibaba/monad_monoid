@@ -281,24 +281,24 @@ test9b = do
 
 {-
 what the heck is the xxxhc below?
-We have to match with bimap2 :: (Functor f, Functor g) => (f ~> f') -> (g ~> g') -> (b g f ~> b g' f')
+We have to match with bimap2 :: (Functor f, Functor g) => (f ~> f') -> (g ~> g') -> (b g f ~> b g' f') for the first case (ww)
 f = HC MyList MyList
 f' = MyList
 
 Now f ~> f' is a natural transformation.
 
-g = MyList (TODO: should be Ident)
-g' = MyList
+g = Identity
+g' = Identity
 
 So, g ~> g' is a natural transformation.
 
 b = HC
 
-b g f got to be HC MyList HC MyList MyList
+b g f got to be HC Identity HC MyList MyList
 
-b g' f' will be HC MyList MyList
+b g' f' will be HC Identity MyList
 
-So, natural transformation from `HC MyList HC MyList MyList` to `MyList MyList` (instantiated on a=Integer in this example.
+So, natural transformation from `HC Identity HC MyList MyList` to `Identity MyList` (instantiated on a=Integer in this example.
 -}
 
 ten = 10::Integer
