@@ -103,3 +103,11 @@ Ref
 * Lots of good references in the lecture notes here: https://www.csc.kth.se/utbildning/kth/kurser/2D1456/avfunk07/view.php?arg=lectures.h&m=1
 * Something very interesting going on with propsition on page 7 of https://math.uchicago.edu/~may/VIGRE/VIGRE2007/REUPapers/FINALAPP/Jerzak.pdf (equivalence between product category and natural transformation). It is saying you can write alpha (for example safehead) without knowing anything the objects of C (for example HASK).
 * https://cs.stackexchange.com/questions/119777/functor-laws-and-natural-transformations-in-haskell
+* https://stackoverflow.com/a/48664770 (added benefit a monad over functor: functor lifts a->b but monad operates on a->m b and hence allows you to return a monadic value, for example an error condition.)
+* Explainn monad by handcrafting list: https://www.schoolofhaskell.com/school/starting-with-haskell/basics-of-haskell/13-the-list-monad
+* https://wiki.haskell.org/User:Michiexile/MATH198/Lecture_7 (leading from categorical product to non cartesian product to functor composition): a monad in a category C to be a monoid object in the category of endofunctors on that category. This directly traslnates to A monad in a category C is an endofunctor T: C\to C equipped with natural transformations \mu: T^2\to T and \eta: 1\to T ...
+* https://groups.seas.harvard.edu/courses/cs152/2021sp/lectures/lec18-monads.pdf
+* mappend is more general than (++) for list: https://stackoverflow.com/questions/10961483/haskell-duplicated-functions-and-mappend. For a monad, the monoid is the composite endofunctor (m m), and mappend is for mu? From wikipedia, any monad both gives rise to a category (called the Kleisli category) and a monoid in the category of functors (from values to computations), with monadic composition as a binary operator in the monoid and unit as identity in the monad.
+* If you get a hidden package error when loading a module, install it with --lib option, for example for QuickCheck `cabal install QuickCheck --lib`.
+* See important notes in `Further Reading` section: https://wiki.haskell.org/Typeclassopedia#Monoid
+
