@@ -66,15 +66,62 @@ rho' x = fmap Id x
 alpha' :: f (g (h a)) -> f (g (h a))
 alpha' = id
 
--- Paralleling pair (,) above, use endofunctor composition, this is essentially object composition where objects are (endo)functors.
+-- Paralleling pair (,) above, use endofunctor composition, this is essentially object composition where objects are (endo)functors. Earlier we used , now we are using :<*> in its place.
 type (f :<*> g) x = f (g x)
 
+-- Parallelizing for pair above, <*> is replacing <#>, bimap for composition
 (<*>) f g = f. fmap g
+
+{-
+An example of <*> usage:
+
+   let w::[Int] = [10, 20]
+   print $ ( (take 3) <*> (+1) ) w
+
+Applies g to the content of functor.
+Applies f to the resulting functor (same type, but new content) as a whole.
+
+Here input is F a (F = [], a = Int).
+f = (+1)
+fmap f :: [Int] -> [Int]
+
+g = take 3
+
+g :: [Int] -> [Int]
+
+
+----
+
+Above bimap can also be considered as a horizontal composition when content are functors.
+
+  let w::[Maybe Int] = [Just 10, Just 20]
+  print $ ( (take 3) <*> (fmap (+1)) ) w
+
+Let's say input is  (G (F a))
+
+Then g is a natural transformation : F a -> F' a. In the example above g = fmap (+1),
+Then fmap g :: G (F a) -> G (F' a)
+
+Also f is a natural transformation from  G (F' a) -> G' (F' a).
+
+So, f . fmap g :: G F a -> G' F' a. This is horizontal composition of f and g.
+
+-}
+
+indexList :: forall a. [a] -> IndexedList a
+indexList x = IndexedList (zip [0..] x)
+
+withErrorHandling :: forall a. Maybe a -> Either String a
+withErrorHandling Nothing = Left "Nothing?"
+withErrorHandling (Just x) = Right x
+
+data IndexedList a = IndexedList [(Int, a)] deriving (Show, Functor)
 
 -- With following, we are able to turn an endofunctor (composition) into a monoid
 class Functor m => Monoid' m where
   one' :: Id a -> m a
   mult' :: (m :<*> m) a -> m a
+  -- Also, notice that both one' and mult' are natural transformations
 
   law1_left',law1_middle',law1_right' :: m a -> m a
   law1_left'   = mult' . (one' <*> id) . lambda'
@@ -88,9 +135,9 @@ class Functor m => Monoid' m where
   law2_right' = mult' . (id <*> mult') . alpha'
 
 instance Monoid' Maybe where
-  one' (Id v) = Just v
-  mult' Nothing = Nothing
-  mult' (Just (Just v)) = Just v
+  one' (Id v) = return v
+  mult' mma     = mma >>= id
+
 {-
 In above, Monoid' definition, can we something like this:
 instance (Monoid a, Monad f) => Monoid (f a) where
@@ -103,8 +150,10 @@ check5 = quickCheck $ \n -> law1_left' (Just n) == law1_right' (Just (n :: Int))
 check6 = quickCheck $ \n -> law2_left' (Just (Just (Just n))) == law2_right' (Just (Just (Just (n :: Int))))
 
 -- showing monad is monoid
+-- Notice how we are able to generically create instance of Monoid' for Maybe just using return and >>=. 
+-- TranslateMonad given below automates this and demonstrates that any monad can be treated Monoid' generically. It is basically translating a Monad into Monoid'.
 
-data Monad m => TranslateMonad m a = TM { unTM :: m a } deriving (Eq,Show)
+data Monad m => TranslateMonad m a = TM { unTM :: m a } deriving (Eq, Show)
 
 translate :: Monad m => m a -> TranslateMonad m a
 translate x = TM x
@@ -112,16 +161,18 @@ translate x = TM x
 instance (Monad m,Functor m) => Functor (TranslateMonad m) where
   fmap f (TM x) = TM (fmap f x)
 
-instance (Functor m,Monad m) => Monoid' (TranslateMonad m) where
+instance (Functor m, Monad m) => Monoid' (TranslateMonad m) where
+  -- Notice how the return, fmap, >>= of underlying monad, m, are used to define monoid operations
   one' (Id x) = TM $ return x
 
   -- join :: Monad m => m (m a) -> m a -- you are constraining m to be monad so we know we can invoke bind on its instances
-  -- Based on the fact that `join mma = mma >>= id`, >>= id below changes `m m a` to `m a`.
+  -- Based on the fact that `join mma = mma >>= id`, >>= id, given below, transforms `m m a` to `m a`.
   -- Precedence for the following : TM $ (fmap unTM x) >>= id
+  -- Note that x cannot be any arbitrary monad, but a (T m) monad for mult' compliance :  (m :<*> m) a -> m a
   mult' (TM x) = TM $ fmap unTM x >>= id
 
 instance Arbitrary a => Arbitrary (Id a) where
-  -- liftM :: Monad m => (a1 -> r) -> m a1 -> m r, promotes a function to a monad
+  -- liftM :: Monad m => (a1 -> r) -> m a1 -> m r, promotes a function to work on monad
   arbitrary = liftM Id arbitrary
 
 instance (Monad m,Eq (m a),Arbitrary (m a)) => Arbitrary (TranslateMonad m a) where
@@ -136,6 +187,9 @@ main :: IO ()
 main  =
  do
    putStrLn "Draft"
+   let o::(TranslateMonad [] Int) = one' (Id (10::Int))
+   print "One--->"
+   print o
    let tm = TM [ TM [1::Int, 2::Int], TM [3::Int] ]
    putStrLn "tm..."
    print tm
@@ -145,7 +199,26 @@ main  =
    print $ (fmap unTM (unTM tm)) >>= id
    putStrLn "mult' tm..."
    print $ mult' tm
-   putStrLn "End draft "
+   -- following two won't work:
+   -- print $ mult' (TM (Just "something"))
+   -- print $ mult' (TM (TM (Just "something")))
+   putStrLn "mult' (TM (Just (TM (Just something))))"
+   print $ mult' (TM (Just (TM (Just "something"))))
+   let ttm :: TranslateMonad [] (TranslateMonad [] (TranslateMonad [] Int)) = TM [ TM [ TM [1::Int, 2::Int], TM [3::Int] ], TM [ TM [4::Int, 5::Int,6::Int] ] ]
+   putStrLn "law2_left' ttm"
+   print $ law2_left' ttm
+
+   putStrLn "plain mult'"
+   print $ mult' (Just (Just "something"))
+   putStrLn "plain law2_left'"
+   print $ law2_left' (Just (Just (Just "something")))
+
+   let w::[Maybe Int] = [Just 10, Just 20]
+   print $ ( (take 3) <*> (fmap (+3)) ) w
+
+   let listOfMaybe2 = [Just (10::Int), Nothing, Just (11::Int)]
+   print $ (indexList <*> withErrorHandling) listOfMaybe2
+   putStrLn "End draft"
    putStrLn "Running tests"
    check1
    check2

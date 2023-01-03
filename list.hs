@@ -391,6 +391,8 @@ https://wiki.haskell.org/Type_composition
 
 type (~>) f g = forall a. f a -> g a
 data HC g f a = HC { unHC :: g (f a) } deriving (Show)
+-- instead of using HC, consider creating a type alias for an operator (for example, :<*>) to give the visual appeal of the fact that we are dealing with monoid operator, i.e., (g :<*> f) a = g (f a)
+-- See http://blog.sigfpe.com/2008/11/from-monoids-to-monads.html for example how it is done there.
 
 -- | horizontal composition of natural transformations
 hc :: Functor g => (g ~> g') -> (f ~> f') -> ((g `HC` f) ~> (g' `HC` f'))
@@ -439,7 +441,7 @@ b g f got to be HC Identity HC MyList MyList
 
 b g' f' will be HC Identity MyList
 
-So, natural transformation from `HC Identity HC MyList MyList` to `Identity MyList` (instantiated on a=Integer in this example.
+So, natural transformation from `HC Identity HC MyList MyList` to `HC Identity MyList`,  instantiated on a=Integer in this example.
 -}
 
 ten = 10::Integer
