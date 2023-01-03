@@ -379,7 +379,7 @@ test7 = (mu . mu) xxx
 {-
 First we need to solve a problem, we need to make Haskell think that MyList MyList is a functor.
 This is so that mu :: MyList (MyList a) -> MyList a is considered a function from a functor MyList MyList to MyList,
-hence can be treated as natural transformation instantiated at `a`.
+hence can be treated as the component `a` of the natural transformation.
 
 There is no direct way of doing it. We have to wrap inside a Compose (like HC or FComp or Compose etc.,) and compose composes.
 

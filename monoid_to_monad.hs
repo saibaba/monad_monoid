@@ -106,8 +106,10 @@ Also f is a natural transformation from  G (F' a) -> G' (F' a).
 
 So, f . fmap g :: G F a -> G' F' a. This is horizontal composition of f and g.
 
+Below is an example where f = indexList and g = withErrorHandling
 -}
 
+data IndexedList a = IndexedList [(Int, a)] deriving (Show, Functor)
 indexList :: forall a. [a] -> IndexedList a
 indexList x = IndexedList (zip [0..] x)
 
@@ -115,7 +117,6 @@ withErrorHandling :: forall a. Maybe a -> Either String a
 withErrorHandling Nothing = Left "Nothing?"
 withErrorHandling (Just x) = Right x
 
-data IndexedList a = IndexedList [(Int, a)] deriving (Show, Functor)
 
 -- With following, we are able to turn an endofunctor (composition) into a monoid
 class Functor m => Monoid' m where
