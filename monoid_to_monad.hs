@@ -16,7 +16,7 @@ import Test.QuickCheck
 
 
 -- The first goal is to create a pointfree version of unit and associative laws
--- We are using a pair to store 2 instances of monoid (the T^2 of mu:: T^2 -> T), 
+-- We are using a pair to store 2 instances of monoid needed for binary operation (mult:: m x m -> m).
 
 lambda :: a -> ((),a)
 lambda x = ((),x)
@@ -69,7 +69,7 @@ alpha' = id
 -- Paralleling pair (,) above, use endofunctor composition, this is essentially object composition where objects are (endo)functors. Earlier we used , now we are using :<*> in its place.
 type (f :<*> g) x = f (g x)
 
--- Parallelizing for pair above, <*> is replacing <#>, bimap for composition
+-- Paralleling pair above, <*> is replacing <#>, bimap for composition
 (<*>) f g = f. fmap g
 
 {-

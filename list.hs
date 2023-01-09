@@ -1,9 +1,11 @@
+{-# OPTIONS_GHC -fglasgow-exts #-}
+
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 
 
-import Prelude hiding((>>=), concat)
+import Prelude hiding((<*>), (>>=), concat)
 
 data Identity a = Identity a deriving (Show, Eq)
 runIdentity (Identity x) = x
@@ -309,7 +311,7 @@ TODO: Now do the same but using horiz comp
 
 --- end assoc --
 
-mu :: MyList (MyList a) -> MyList a
+mu :: forall a. MyList (MyList a) -> MyList a
 mu MyNil = MyNil
 {-
   Following step is very important to understanding composing functor vs. as a binary monoid operator operating on two instances of functor.
@@ -390,8 +392,9 @@ https://wiki.haskell.org/Type_composition
 -}
 
 type (~>) f g = forall a. f a -> g a
+
 data HC g f a = HC { unHC :: g (f a) } deriving (Show)
--- instead of using HC, consider creating a type alias for an operator (for example, :<*>) to give the visual appeal of the fact that we are dealing with monoid operator, i.e., (g :<*> f) a = g (f a)
+-- Instead of using HC, consider creating a type alias for an operator (for example, :<*>) to give the visual appeal of the fact that we are dealing with monoid operator, i.e., (g :<*> f) a = g (f a)
 -- See http://blog.sigfpe.com/2008/11/from-monoids-to-monads.html for example how it is done there.
 
 -- | horizontal composition of natural transformations
@@ -423,7 +426,7 @@ test9b = do
   putStrLn "---"
 
 {-
-what the heck is the xxxhc below?
+what the heck is the xxxhclhs below?
 We have to match with bimap2 :: (Functor f, Functor g) => (f ~> f') -> (g ~> g') -> (b g f ~> b g' f') for the first case (ww)
 f = HC MyList MyList
 f' = MyList
@@ -442,34 +445,60 @@ b g f got to be HC Identity HC MyList MyList
 b g' f' will be HC Identity MyList
 
 So, natural transformation from `HC Identity HC MyList MyList` to `HC Identity MyList`,  instantiated on a=Integer in this example.
+bimap2 f g = HC . g . fmap f . unHC
+
+Here muhc applied to (MyCons (MyCons...)) instantiated at Integer
+
 -}
 
 ten = 10::Integer
-xxxhc = HC (Identity (HC (MyCons (MyCons ten MyNil) MyNil)))
+xxxhclhs = HC (Identity (HC (MyCons (MyCons ten MyNil) MyNil)))
 
 {-
 can we use xxx instead of above ?
-xxxhc = HC (Identity (HC xxx))
+xxxhclhs = HC (Identity (HC xxx))
 -}
 
 muhc:: HC MyList MyList a -> MyList a
 muhc (HC l) = mu l
-ww = bimap2 muhc id xxxhc
+wwlhs = bimap2 muhc id xxxhclhs
 
 test9 = do
-  putStrLn "ww"
-  print $ ww
+  putStrLn "wwlhs"
+  print $ wwlhs
   putStrLn "---"
 
-xxxhcr = HC (HC (MyCons (MyCons (Identity ten) MyNil) MyNil))
-wwr = bimap2 id muhc xxxhcr
+{-
+in rhs case: 
+
+f = Identity
+f' = Identity
+
+so f ~> f' is a natural transformation.
+
+g = HC MyList MyList
+g' = MyList
+
+so g ~> g' is a natural transformation.
+
+b = HC
+
+b g f got to be HC (HC MyList MyList) Identity
+b g' f' got to be HC MyList Identity.
+
+
+Final natural transformation is from `HC (HC MyList MyList) Identity` to `HC MyList Identity`,  instantiated on a=Integer in this example.
+
+Here the (MyCon (MyCon ...)) is handled by mu and instantiated at 'Identity Int`.
+
+-}
+
+xxxhcrhs = HC (HC (MyCons (MyCons (Identity ten) MyNil) MyNil))
+wwrhs = bimap2 id muhc xxxhcrhs
 test9r = do
-  putStrLn "wwr"
-  print $ wwr
+  putStrLn "wwrhs"
+  print $ wwrhs
   putStrLn "---"
-
-
-
 
 {-
 
@@ -487,7 +516,6 @@ MyDList a = MyList (MyList a)
 and mu is from MyDList a -> MyList a
 
 μ is a natural transformation from the square of the functor T2 back to T. The square is simply the functor composed with itself, T ∘ T (we can only do this kind of squaring for endofunctors).
-
 
 
 (saying this is wrong: mu: MyList (MyList a) -> Identity (MyList a)  so, it is instantiated on (MyList a) and from functor MyList to functor Identity. Because we are interested in inistatiating it on `a`)
