@@ -4,7 +4,6 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 
-
 import Prelude hiding((<*>), (>>=), concat)
 
 data Identity a = Identity a deriving (Show, Eq)
@@ -12,6 +11,8 @@ runIdentity (Identity x) = x
 
 instance Functor Identity where
   fmap f (Identity a) = Identity (f a)
+
+ident (Identity x) = Identity x
 
 -- recursively defined list data structure
 data MyList a = MyNil | MyCons a (MyList a) deriving (Show, Eq)
@@ -39,18 +40,20 @@ xx = MyCons x (MyCons y MyNil)
 
 a:: MyList (MyList Integer)
 a = MyCons (MyCons 1 (MyCons 2 (MyCons 3 MyNil))) MyNil
+-- a = [ [1, 2, 3] ]
 bb1:: MyList Integer
 bb2:: MyList Integer
 bb1 = MyCons 10 (MyCons 20 (MyCons 30 MyNil))
+-- bb1 = [10, 20, 30]
 bb2 = MyCons 100 (MyCons 200 (MyCons 300 MyNil))
-
+-- bb2 = [100, 200, 300]
 b = MyCons bb1 (MyCons bb2 MyNil)
+-- b = [ [10, 20, 30],  [100, 200, 300] ]
 c:: MyList (MyList Integer)
 c = MyCons (MyCons 400 MyNil) MyNil
-
+-- c = [ [400] ]
 xxx:: MyList (MyList (MyList Integer))
 xxx = MyCons a (MyCons b (MyCons c MyNil))
-
 {-
 
 How do we demonstrate the associativity of concat ?
@@ -373,8 +376,45 @@ test6 = do
    print $ (mu . fmap mu) xxx
    putStrLn "-----"
 
+{-
+
+Note that you can use asTypeOf to investigate the instantiation (natural component) of mu in the first and second occurence: mu . fmap mu:
+
+Prelude Main> ((mu `asTypeOf` _) . fmap mu) xxx
+
+<interactive>:2:17: error:
+    • Found hole: _ :: MyList (MyList Integer) -> MyList Integer
+      ...
+          with mu @Integer
+
+Prelude Main> (mu . fmap (mu `asTypeOf` _)) xxx
+
+<interactive>:3:27: error:
+    • Found hole: _ :: MyList (MyList Integer) -> MyList Integer
+      ...
+          with mu @Integer
+-}
+
+
 -- Due to associativity (mu. fmap mu = mu . mu) test6 can be written as test7 below
 test7 = (mu . mu) xxx
+
+{-
+
+Prelude Main> (mu . (mu `asTypeOf` _)) xxx
+
+    • Found hole:
+        _ :: MyList (MyList (MyList Integer)) -> MyList (MyList Integer)
+        ...
+        with mu @(MyList Integer)
+          
+Prelude Main> ((mu `asTypeOf` _) . mu) xxx
+
+<interactive>:3:17: error:
+    • Found hole: _ :: MyList (MyList Integer) -> MyList Integer
+      ...
+      with mu @Integer
+-}
 
 -- Now let's use horiz comp
 -- First define nat. trans constraint as map from functor to functor
@@ -447,26 +487,85 @@ b g' f' will be HC Identity MyList
 So, natural transformation from `HC Identity HC MyList MyList` to `HC Identity MyList`,  instantiated on a=Integer in this example.
 bimap2 f g = HC . g . fmap f . unHC
 
-Here muhc applied to (MyCons (MyCons...)) instantiated at Integer
+-}
+
+{-
+can we verify actual instantiation of mu via something like:
+
+https://stackoverflow.com/questions/65258061/can-i-print-in-haskell-the-type-of-a-polymorphic-function-as-it-would-become-if
 
 -}
 
+f_1 :: MyList a -> MyList a
+f_1 x = x
+g_1 :: HC MyList MyList a -> MyList a
+g_1 = mu . unHC
+
 ten = 10::Integer
-xxxhclhs = HC (Identity (HC (MyCons (MyCons ten MyNil) MyNil)))
+--xxxhclhs = HC (HC (MyCons (MyCons (MyCons ten MyNil) MyNil) MyNil))
+xxxhclhs = HC (HC (MyCons a (MyCons b (MyCons c MyNil))))
 
 {-
 can we use xxx instead of above ?
 xxxhclhs = HC (Identity (HC xxx))
 -}
 
-muhc:: HC MyList MyList a -> MyList a
-muhc (HC l) = mu l
-wwlhs = bimap2 muhc id xxxhclhs
+wwlhs = mu ( unHC (bimap2 f_1 g_1 xxxhclhs) )
 
-test9 = do
+test9l = do
   putStrLn "wwlhs"
+  print $ xxxhclhs
   print $ wwlhs
   putStrLn "---"
+
+{-
+
+Prelude Main> (HC . ((mu `asTypeOf` _) . unHC) . fmap id . unHC) xxxhclhs
+
+    • Found hole:
+        _ :: MyList (MyList (MyList Integer)) -> MyList (MyList Integer)
+          ...
+          with mu @(MyList Integer)
+
+In its full glory, for lhs:
+
+Prelude Main> (mu `asTypeOf` _) (unHC ((HC . ((mu `asTypeOf` _) . unHC) . fmap id . unHC) xxxhclhs))
+
+<interactive>:8:16: error:
+    • Found hole: _ :: MyList (MyList Integer) -> MyList Integer
+    • In the second argument of ‘asTypeOf’, namely ‘_’
+      In the expression: mu `asTypeOf` _
+      In the expression:
+        (mu `asTypeOf` _)
+          (unHC
+             ((HC . ((mu `asTypeOf` _) . unHC) . fmap id . unHC) xxxhclhs))
+    • Relevant bindings include
+        it :: MyList Integer (bound at <interactive>:8:1)
+      Valid hole fits include
+        concatn :: forall a. MyList (MyList a) -> MyList a
+          with concatn @Integer
+          (imported from ‘Main’ (and originally defined at list.hs:258:1-7))
+        mu :: forall a. MyList (MyList a) -> MyList a
+          with mu @Integer
+          (imported from ‘Main’ (and originally defined at list.hs:317:1-2))
+
+<interactive>:8:48: error:
+    • Found hole:
+        _ :: MyList (MyList (MyList Integer)) -> MyList (MyList Integer)
+    • In the second argument of ‘asTypeOf’, namely ‘_’
+      In the first argument of ‘(.)’, namely ‘(mu `asTypeOf` _)’
+      In the first argument of ‘(.)’, namely ‘((mu `asTypeOf` _) . unHC)’
+    • Relevant bindings include
+        it :: MyList Integer (bound at <interactive>:8:1)
+      Valid hole fits include
+        concatn :: forall a. MyList (MyList a) -> MyList a
+          with concatn @(MyList Integer)
+          (imported from ‘Main’ (and originally defined at list.hs:258:1-7))
+        mu :: forall a. MyList (MyList a) -> MyList a
+          with mu @(MyList Integer)
+          (imported from ‘Main’ (and originally defined at list.hs:317:1-2))
+
+-}
 
 {-
 in rhs case: 
@@ -493,11 +592,97 @@ Here the (MyCon (MyCon ...)) is handled by mu and instantiated at 'Identity Int`
 
 -}
 
-xxxhcrhs = HC (HC (MyCons (MyCons (Identity ten) MyNil) MyNil))
-wwrhs = bimap2 id muhc xxxhcrhs
+f_2 :: HC MyList MyList a -> MyList a
+f_2 = mu . unHC
+g_2 :: MyList a -> MyList a
+g_2 x = x
+
+--xxxhcrhs = HC (MyCons (HC (MyCons (MyCons ten MyNil) MyNil)) MyNil)
+xxxhcrhs =  HC (MyCons (HC a) (MyCons (HC b) (MyCons (HC c) MyNil)))
+{-
+How did I get xxxhcrhs?
+        ------ a  ---, -------------  b ----------------- , --- c----
+xxx = [ [ [1, 2, 3] ], [ [10, 20, 30],  [100, 200, 300] ] , [ [400] ] ]
+
+So, to get  HC MyList (HC MyList MyList) Integer:
+
+     HC [ HC [[1, 2, 3] ], HC [ [10, 20, 30],  [100, 200, 300] ] , HC [ [400] ] ] 
+     HC (MyCons (HC a) (MyCons (HC b) (MyCons (HC c) MyNil)))
+
+-}
+
+wwrhs = mu (unHC (bimap2 f_2 g_2 xxxhcrhs))
+
 test9r = do
   putStrLn "wwrhs"
   print $ wwrhs
+  putStrLn "---"
+
+{-
+Prelude Main> (HC .  id . fmap ((mu `asTypeOf` _) . unHC) . unHC) xxxhcrhs
+
+    • Found hole: 
+        _ :: MyList (MyList Integer) -> MyList Integer
+        ...
+          with mu @Integer
+
+In its full glory for rhs:
+
+Prelude Main> (mu `asTypeOf` _) (unHC ((HC .  id . fmap ((mu `asTypeOf` _) . unHC) . unHC) xxxhcrhs))
+
+<interactive>:1:16: error:
+    • Found hole: _ :: MyList (MyList Integer) -> MyList Integer
+    • In the second argument of ‘asTypeOf’, namely ‘_’
+      In the expression: mu `asTypeOf` _
+      In the expression:
+        (mu `asTypeOf` _)
+          (unHC
+             ((HC . id . fmap ((mu `asTypeOf` _) . unHC) . unHC) xxxhcrhs))
+    • Relevant bindings include
+        it :: MyList Integer (bound at <interactive>:1:1)
+      Valid hole fits include
+        concatn :: forall a. MyList (MyList a) -> MyList a
+          with concatn @Integer
+          (imported from ‘Main’ (and originally defined at list.hs:258:1-7))
+        mu :: forall a. MyList (MyList a) -> MyList a
+          with mu @Integer
+          (imported from ‘Main’ (and originally defined at list.hs:317:1-2))
+
+<interactive>:1:59: error:
+    • Found hole: _ :: MyList (MyList Integer) -> MyList Integer
+    • In the second argument of ‘asTypeOf’, namely ‘_’
+      In the first argument of ‘(.)’, namely ‘(mu `asTypeOf` _)’
+      In the first argument of ‘fmap’, namely
+        ‘((mu `asTypeOf` _) . unHC)’
+    • Relevant bindings include
+        it :: MyList Integer (bound at <interactive>:1:1)
+      Valid hole fits include
+        concatn :: forall a. MyList (MyList a) -> MyList a
+          with concatn @Integer
+          (imported from ‘Main’ (and originally defined at list.hs:258:1-7))
+        mu :: forall a. MyList (MyList a) -> MyList a
+          with mu @Integer
+          (imported from ‘Main’ (and originally defined at list.hs:317:1-2))
+-}
+
+{-
+All in all, with "o" standing for horizontal composition:
+
+mu_a . mu_Ta = mu_a . fmap mu_a = mu_a . (mu_a o id)  = mu_a . (bimap2 mu_a id)
+                                = mu_a . (id o mu_Ta) = mu_a . (bimap2 id   mu_Ta)
+
+-}
+
+test9s = do
+  putStrLn "------- Summary -----"
+  putStrLn "xxxhclhs"
+  print $ xxxhclhs
+  putStrLn "xxxhcrhs"
+  print $ xxxhcrhs
+  print $ (mu . mu) xxx
+  print $ (mu . fmap mu) xxx
+  print $ (mu . unHC) (((bimap2 id (mu . unHC)) ) xxxhclhs)
+  print $ (mu . unHC) (((bimap2 (mu . unHC) id) ) xxxhcrhs)
   putStrLn "---"
 
 {-
@@ -635,8 +820,9 @@ main = do
   print test8
   do { test9a }
   do { test9b }
-  do { test9 }
+  do { test9l }
   do { test9r }
+  do { test9s }
 
 {-
 And we haven't yet talked about mappend:
