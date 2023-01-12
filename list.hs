@@ -1,31 +1,23 @@
 {-# OPTIONS_GHC -fglasgow-exts #-}
 
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE TypeSynonymInstances #-}
-
 import Prelude hiding((<*>), (>>=), concat)
-
-data Identity a = Identity a deriving (Show, Eq)
-runIdentity (Identity x) = x
-
-instance Functor Identity where
-  fmap f (Identity a) = Identity (f a)
-
-ident (Identity x) = Identity x
+import Test.QuickCheck
+import Control.Monad (liftM, liftM2)
+import Debug.Trace
 
 -- recursively defined list data structure
 data MyList a = MyNil | MyCons a (MyList a) deriving (Show, Eq)
 
 rtn x = MyCons x (MyNil)
 
--- Note that this concat is different from the one in Haskell List. That one is MyList (MyList a) -> MyList a, i.e., monad join/mu.
--- This one is simply combining elements from 2 lists into one list.
+-- Note that this concat is different from the one in Haskell List. That one is MyList (MyList a) -> MyList a, i.e., flatten/monad join/mu.
+-- This one is simply combining elements from given two lists into one list.
 concat :: MyList a -> MyList a -> MyList a
 concat l1 MyNil = l1
 concat MyNil l2 = l2
 concat (MyCons a l1) l2  = MyCons a (concat l1 l2)
 
+-- Some lists to play with
 x::MyList Integer
 x = MyCons 3 (MyCons 2 (MyCons 1 (MyNil)))
 
@@ -54,20 +46,29 @@ c = MyCons (MyCons 400 MyNil) MyNil
 -- c = [ [400] ]
 xxx:: MyList (MyList (MyList Integer))
 xxx = MyCons a (MyCons b (MyCons c MyNil))
-{-
 
-How do we demonstrate the associativity of concat ?
+{-
+Demonstrate the associativity of concat with examples:
 
 We want to show that:
-
 concat (concat x y) z = concat x (concat y z)
+
+Relation to math:  We use parentheses to indicate computation order (a + b) + c = a + (b + c). This can be thought of +( + (a b) c) so on. 
+Also you need a way to refer to (a b) together like a pair passed to function +.
+
 -}
 
-test0 = do
-  putStrLn "Associativity of concat, i.e. concat (concat x y) z == concat x (concat y z)"
-  print $ (concat(concat x y) z) == (concat x (concat y z))
-  putStrLn "------"
+instance (Arbitrary a) => Arbitrary (MyList a) where
+  arbitrary = sized mylist
+    where mylist 0 = liftM (\v -> MyCons v MyNil) arbitrary
+          mylist n | n > 0 =
+                 oneof [liftM (\v -> MyCons v MyNil) arbitrary,
+                        liftM2 (\v l -> MyCons v l) arbitrary sublist]
+            where sublist = mylist (n `div` 2)
 
+--check0 = quickCheck $ (concat (concat (trace (show x) x) y) z) == (concat x (concat y z))
+check0 = quickCheck $ (concat (concat x y) z) == (concat x (concat y z))
+check1 = quickCheck $ \x y z ->  (concat (concat x y) z) == (concat (x::MyList Integer) (concat y z))
 
 {-
 Reasoning about above associativity law is made difficult due to interleaved presence of variables that need to be tracked/accounted for.
@@ -126,19 +127,16 @@ bimap f g (MyPair a b)  = MyPair (f a) (g b)
 concatm :: MyPair (MyList a) (MyList a) -> MyList a
 concatm (MyPair l1 l2) = concat l1 l2
 
-test_assoc_via_pairs x y z = do
-  putStrLn ""
-  putStrLn "Testing association of concatenation using pair to hold two lists"
-  result <- let p_lhs = MyPair (MyPair x y) z
-                p_rhs = MyPair x (MyPair y z)
-                -- note how both (concatm . bimap concatm id) and (concatm . bimap id concatm) are in point-free form indicating, 
-                -- they are equal at morphism level instead at object level for each object
-                lhs = (concatm . bimap concatm id) p_lhs
-                rhs = (concatm . bimap id concatm) p_rhs
-            in  return (lhs == rhs)
-  print $ result
-  putStrLn "Done"
-  putStrLn ""
+test_assoc_via_pairs x y z = let
+  p_lhs = MyPair (MyPair x y) z
+  p_rhs = MyPair x (MyPair y z)
+  -- note how both (concatm . bimap concatm id) and (concatm . bimap id concatm) are in point-free form indicating, 
+  -- they are equal at morphism level instead at object level for each object
+  lhs = (concatm . bimap concatm id) p_lhs
+  rhs = (concatm . bimap id concatm) p_rhs
+  in  (lhs == rhs)
+
+check2 = quickCheck $ \x y z -> (test_assoc_via_pairs (x::MyList Integer) y z)
 
 {-
 You might be tempted to make MyPair a functor and lift original concat by its fmap. But this is not going to be neat, what do you return from fmap? Something dummy? It is kludgy.
@@ -270,17 +268,13 @@ any new data structure (like MyPair), but reusing the same (MyList).
 
 -}
 
-test_assoc aaa = do
-  putStrLn "test_assoc using functor composition"
-  putStrLn "Testing association of concatenation (concatn . concatn == concatn . fmap concatn)"
-  result <- let lhs = (concatn . concatn) aaa
-                rhs = (concatn . fmap concatn) aaa
-            in  return (lhs == rhs)
-  print $ result
-  putStrLn "Done"
-  putStrLn ""
+test_assoc aaa = 
+  let lhs = (concatn . concatn) aaa
+      rhs = (concatn . fmap concatn) aaa
+  in  (lhs == rhs)
 
-
+check3 = quickCheck $ test_assoc xxx
+check4 = quickCheck $ \aaa -> (test_assoc (aaa::MyList (MyList (MyList Integer))))
 
 {-
 
@@ -325,12 +319,10 @@ mu MyNil = MyNil
 -}
 mu (MyCons (MyCons a l1) l2) = MyCons a (concat l1 (mu l2))
 
-test_mu = do
-  putStrLn "Checking if mu is doing expected"
-  print xx
-  print $ mu xx == MyCons 3 (MyCons 2 (MyCons 1 (MyCons 30 (MyCons 20 (MyCons 10 MyNil)))))
-  putStrLn "---"
+test_mu aa bb = (mu aa == bb)
  
+check5 = quickCheck $ test_mu xx (MyCons 3 (MyCons 2 (MyCons 1 (MyCons 30 (MyCons 20 (MyCons 10 MyNil))))))
+
 -- bind operator >>=, using mu and fmap
 (>>=) :: MyList a -> (a -> MyList b) -> MyList b
 infixl >>=
@@ -338,7 +330,9 @@ l >>= f = mu (fmap f l)
 
 msqr a = rtn (a*a)
 
-test4 = x >>= msqr
+test_bind_op a b = (a >>= msqr) == b
+
+check6 = quickCheck $ test_bind_op x (MyCons 9 (MyCons 4 (MyCons 1 MyNil)))
 
 -- bind, but this time directly without using mu and fmap
 bind:: MyList a -> (a -> MyList b) -> MyList b
@@ -349,7 +343,8 @@ MyNil `bind` _ = MyNil
 -- is associative.
 (MyCons x l) `bind` f = concat (f x) (l `bind` f)
 
-test5 = x `bind` msqr
+test_bind a b = (a `bind` msqr) == b 
+check7 = quickCheck $ test_bind x (MyCons 9 (MyCons 4 (MyCons 1 MyNil)))
 
 -- 3ply nested list
 ---xxx = MyCons (MyCons (MyCons 3 MyNil) (MyCons (MyCons 2 MyNil) (MyCons (MyCons 1 MyNil) MyNil))) MyNil
@@ -365,16 +360,6 @@ xxx = [  [
          ]
       ]
 -}
-
-test6a = do
-   putStrLn "mu xxx"
-   print $ mu xxx
-   putStrLn "-----"
-
-test6 = do
-   putStrLn "mu . fmap mu for xxx"
-   print $ (mu . fmap mu) xxx
-   putStrLn "-----"
 
 {-
 
@@ -395,9 +380,10 @@ Prelude Main> (mu . fmap (mu `asTypeOf` _)) xxx
           with mu @Integer
 -}
 
+-- Due to associativity (mu. fmap mu = mu . mu)
+test_mu_mu_and_mu_fmap aaa = ( (mu . mu) aaa ) == (mu . fmap mu) aaa
 
--- Due to associativity (mu. fmap mu = mu . mu) test6 can be written as test7 below
-test7 = (mu . mu) xxx
+check8 = quickCheck $ test_mu_mu_and_mu_fmap xxx
 
 {-
 
@@ -433,13 +419,34 @@ https://wiki.haskell.org/Type_composition
 
 type (~>) f g = forall a. f a -> g a
 
+
 data HC g f a = HC { unHC :: g (f a) } deriving (Show)
+type (g :<*> f) a = g (f a)
+
 -- Instead of using HC, consider creating a type alias for an operator (for example, :<*>) to give the visual appeal of the fact that we are dealing with monoid operator, i.e., (g :<*> f) a = g (f a)
 -- See http://blog.sigfpe.com/2008/11/from-monoids-to-monads.html for example how it is done there.
 
 -- | horizontal composition of natural transformations
 hc :: Functor g => (g ~> g') -> (f ~> f') -> ((g `HC` f) ~> (g' `HC` f'))
 g `hc` f = HC . g . fmap f . unHC
+
+
+--(<*>) :: (Functor a, Functor b, Functor c, Functor d) => (a (d x) -> c (d y)) -> (b z -> d x) -> a (b z) -> c (d y)
+-- this works too: (<*>) ::  (Functor a, Functor b) => (a (a x) -> a (a y)) -> (b z -> a x) -> a (b z) -> a (a y)
+--(<*>) :: (Functor a, Functor b, Functor c, Functor d) =>  (c y -> d y) -> (a x -> b x) -> c (a x) -> d (b x)
+-- this works for rhs_plain only not lhs_plain : (<*>) ::  (Functor a, Functor b) => (a (a x) -> a (a y)) -> (b x -> a x) -> a (b x) -> a (a y)
+-- this also works again for rhs_plain only : (<*>) ::  (Functor a) => (a (a x) -> a (a y)) -> (a x -> a x) -> a (a x) -> a (a y)
+
+-- this works for both: (<*>) ::  (Functor a, Functor b) => (a (a z) -> a (a y)) -> (b x -> a z) -> a (b x) -> a (a y)
+
+-- this works too for both since there is only one functor
+(<*>) ::  (Functor a) => (a (a z) -> a (a y)) -> (a x -> a z) -> a (a x) -> a (a y)
+
+--(<*>) ::  (Functor a, Functor b) => (c z -> d z) -> (b x -> a x) -> a (b x) -> a (a y)
+
+--(<*>) :: (Functor f, Functor g, Functor f', Functor g') => (forall y. g y -> g' y) -> (forall x. f x -> f' x) -> (forall z. g (f z) -> g' (f' z))
+
+(<*>) g f = g . fmap f
 
 class NatBiFunctor b where
   -- bimap2 is basically a special case of horizontal composition of two natural transformations (f ~> f') and (g ~> g'). 
@@ -448,22 +455,14 @@ class NatBiFunctor b where
   bimap2 :: (Functor f, Functor g) => (f ~> f') -> (g ~> g') -> (b g f ~> b g' f')
 
 instance NatBiFunctor HC where
+    -- basically horizontal composition of f and g. Since there are two functors creating one endofunctor, we need to wrap them in HC.
     bimap2 f g = HC . g . fmap f . unHC
 
 instance (Functor g, Functor f) => Functor (HC g f) where
   fmap h (HC gf) = HC (fmap (fmap h) gf)
 
-w f g = g . fmap f
-
-test9a = do
-  putStrLn "w mu id xxx"
-  print $ mu (w mu id xxx)
-  putStrLn "----"
-
-test9b = do
-  putStrLn "w id mu xxx"
-  print $ mu (w id mu xxx)
-  putStrLn "---"
+test_assoc_horiz_comp aaa = (mu . (id . fmap mu) ) aaa == (mu . (mu . fmap id) ) aaa
+check9 = quickCheck $ test_assoc_horiz_comp xxx
 
 {-
 what the heck is the xxxhclhs below?
@@ -510,13 +509,15 @@ can we use xxx instead of above ?
 xxxhclhs = HC (Identity (HC xxx))
 -}
 
-wwlhs = mu ( unHC (bimap2 f_1 g_1 xxxhclhs) )
+lhs v = mu ( unHC (bimap2 f_1 g_1 v) )
 
-test9l = do
-  putStrLn "wwlhs"
-  print $ xxxhclhs
-  print $ wwlhs
-  putStrLn "---"
+lhs_plain = mu . (id <*> mu)
+
+test101 = do
+  putStrLn "test101"
+  print $ xxx
+  print $ lhs_plain xxx
+  putStrLn "-------"
 
 {-
 
@@ -597,7 +598,6 @@ f_2 = mu . unHC
 g_2 :: MyList a -> MyList a
 g_2 x = x
 
---xxxhcrhs = HC (MyCons (HC (MyCons (MyCons ten MyNil) MyNil)) MyNil)
 xxxhcrhs =  HC (MyCons (HC a) (MyCons (HC b) (MyCons (HC c) MyNil)))
 {-
 How did I get xxxhcrhs?
@@ -609,14 +609,22 @@ So, to get  HC MyList (HC MyList MyList) Integer:
      HC [ HC [[1, 2, 3] ], HC [ [10, 20, 30],  [100, 200, 300] ] , HC [ [400] ] ] 
      HC (MyCons (HC a) (MyCons (HC b) (MyCons (HC c) MyNil)))
 
+Notice how this paralles: concat (concat x y) z = concat x (concat y z), +(+(a b) c) and needing a way to hold a pair.
+
 -}
 
-wwrhs = mu (unHC (bimap2 f_2 g_2 xxxhcrhs))
+rhs v = mu (unHC (bimap2 f_2 g_2 v))
+rhs_plain = mu . (mu <*> id)
 
-test9r = do
-  putStrLn "wwrhs"
-  print $ wwrhs
-  putStrLn "---"
+test102 = do
+  putStrLn "test102"
+  print $ xxx
+  print $ rhs_plain xxx
+  putStrLn "-------"
+
+test_assoc_via_bimap_aka_horiz_comp aaa bbb = lhs aaa == rhs bbb
+
+check10 = quickCheck $ test_assoc_via_bimap_aka_horiz_comp xxxhclhs xxxhcrhs
 
 {-
 Prelude Main> (HC .  id . fmap ((mu `asTypeOf` _) . unHC) . unHC) xxxhcrhs
@@ -673,17 +681,14 @@ mu_a . mu_Ta = mu_a . fmap mu_a = mu_a . (mu_a o id)  = mu_a . (bimap2 mu_a id)
 
 -}
 
-test9s = do
-  putStrLn "------- Summary -----"
-  putStrLn "xxxhclhs"
-  print $ xxxhclhs
-  putStrLn "xxxhcrhs"
-  print $ xxxhcrhs
-  print $ (mu . mu) xxx
-  print $ (mu . fmap mu) xxx
-  print $ (mu . unHC) (((bimap2 id (mu . unHC)) ) xxxhclhs)
-  print $ (mu . unHC) (((bimap2 (mu . unHC) id) ) xxxhcrhs)
-  putStrLn "---"
+test_assoc_all plain aaa bbb =
+  let v1 = (mu . mu) plain
+      v2 = (mu . fmap mu) plain
+      v3 = (mu . unHC) (((bimap2 id (mu . unHC)) ) aaa)
+      v4 = (mu . unHC) (((bimap2 (mu . unHC) id) ) bbb)
+  in  (v1 == v2) && (v1 == v3) && (v1 == v4) 
+
+check11 = quickCheck $ test_assoc_all xxx xxxhclhs xxxhcrhs
 
 {-
 
@@ -704,6 +709,34 @@ and mu is from MyDList a -> MyList a
 
 
 (saying this is wrong: mu: MyList (MyList a) -> Identity (MyList a)  so, it is instantiated on (MyList a) and from functor MyList to functor Identity. Because we are interested in inistatiating it on `a`)
+
+-}
+
+{-
+We have not talked about bimap2, but it is a horizontal composition (do `asTypeOf` on it to get details and process them. Summary:
+
+bimap2 :: (Functor f, Functor g) => (f ~> f') -> (g ~> g') -> (b g f ~> b g' f')
+bimap2 f g = HC . g . fmap f . unHC
+
+bimap2 id mu 
+
+Actual type: (MyList a -> MyList a)
+             -> (HC MyList MyList a -> MyList a)
+             -> HC (HC MyList MyList) MyList Integer
+             -> HC MyList MyList Integer
+
+Let:
+f = f' = MyList 
+g = MyList MyList (also a functor as it is composition of functors)
+g' = MyList
+a = Integer
+
+Then above becomes (Ignoring HC):
+   (f a -> f' a) -> (g a -> g' a) -> g (f a) -> g' (f' a)
+Or
+   (f ~> f') -> (g ~> g') -> (g f ~> g' f')
+
+So bimap2 is a horizontal composition of natural transformations as promised.
 
 -}
 
@@ -754,7 +787,9 @@ f >=> g = \a -> let
     l = f a
     in l >>= g
 
-test8 = ( (\v -> rtn v) >=> msqr ) 5
+test_fish = ( (\v -> rtn v) >=> msqr ) 5
+
+check12 = quickCheck $ test_fish == (MyCons 25 MyNil)
 
 {-
 (f >=> g) >=> h
@@ -807,22 +842,21 @@ main = do
     print xxx;
     putStrLn "------"
   }
-  do { test_mu }
-  do { test0}
-  do { test_assoc_via_pairs x y z }
-  do { test_assoc xxx }
-  print test4
-  print test5
-  do { test6a }
-  do { test6 }
-  print test7
-  -- print (test6 == test7)
-  print test8
-  do { test9a }
-  do { test9b }
-  do { test9l }
-  do { test9r }
-  do { test9s }
+  check0
+  check1
+  check2
+  check3
+  check4
+  check5
+  check6
+  check7
+  check8
+  check9
+  check10
+  check11
+  check12
+  do { test101 }
+  do { test102 }
 
 {-
 And we haven't yet talked about mappend:

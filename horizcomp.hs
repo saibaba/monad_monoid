@@ -8,21 +8,21 @@ import Control.Monad(join)
 {-
 F = T2
 F' = T
-αa :: F a -> F'a
+α_a :: F a -> F'a
 G = T
 G' = T
 β = id
 
-G (F a) to G'(F'a)
+G (F a) to G'(F' a)
 
 T3 -> T2 a
 
-G'αa ∘ βF a
+G'α_a ∘ β_(F a)
 
 fmap join . id
 
 
-βF'a ∘ G αa
+β_F'a ∘ G α_a
 
 id . fmap join
 
