@@ -510,7 +510,6 @@ xxxhclhs = HC (Identity (HC xxx))
 -}
 
 lhs v = mu ( unHC (bimap2 f_1 g_1 v) )
-
 lhs_plain = mu . (id <*> mu)
 
 test101 = do
@@ -518,6 +517,7 @@ test101 = do
   print $ xxx
   print $ lhs_plain xxx
   putStrLn "-------"
+
 
 {-
 
@@ -614,6 +614,7 @@ Notice how this paralles: concat (concat x y) z = concat x (concat y z), +(+(a b
 -}
 
 rhs v = mu (unHC (bimap2 f_2 g_2 v))
+
 rhs_plain = mu . (mu <*> id)
 
 test102 = do
