@@ -48,6 +48,21 @@ xxx:: MyList (MyList (MyList Integer))
 xxx = MyCons a (MyCons b (MyCons c MyNil))
 
 {-
+To understand xxx, the 3ply nested list, compare to this:
+xxx = [  [
+           [1,2,3]
+         ], 
+         [
+           [10,20,30],[100,200,300]
+         ],
+         [
+           [400]
+         ]
+      ]
+-}
+
+
+{-
 Demonstrate the associativity of concat with examples:
 
 We want to show that:
@@ -263,8 +278,8 @@ So, if we want to replace the cross product with composition of endofunctors, we
 (ref: https://blog.merovius.de/posts/2018-01-08-monads-are-just-monoids/)
 Is this what happening here between concat and concatn?
 
-Here like concatm we had to create for MyPair, we have to create a new concatn paralleling concat. But one difference is that we are not leveraging
-any new data structure (like MyPair), but reusing the same (MyList).
+Here like concatm we had to create for MyPair, we have to create a new concatn paralleling concat. But in this case that we do not need 
+any new data structure like MyPair, but reuse the same (MyList).
 
 -}
 
@@ -286,11 +301,11 @@ Also, categorical product is commutative, which we do not need/use: https://en.w
 Let's look at the essential pieces we used: (1) need to store two functors (x and y or y and z) at different levels ((x,y) and z) (2) need to apply a natural transformation (concat) to the two functors stored and create a new functor.
 Hmm... that sounds like a bifunctor, but specialized for functors and natural transformations.
 
-So, no we do not need product. All we need is a bifunctor. 
+So, no, we do not need product. All we need is a bifunctor. 
 
 All we need is ability to lift 2 natural transformations (mu and id) to prove the associativity and unit laws (mu . bimap id mu = mu . bimap mu id).
 
-So, given that a functor can contain anything (forall, any object), why not trick it to store an instance of itself recursively? The we do not need a new structure
+So, given that a functor can contain anything (forall, any object), why not trick it to store an instance of itself recursively? Then we do not need a new structure
 like MyPair. This is endofunctor composition. But you may ask, do not you need to strore two things for bifunctor but not one in itself? That's where single object
 monoid comes into play. With monoids and monads, we are always thinking about the "structural" content than payload of the ADT. For example "maybe", "the state", "the count", 
 "the pair or comma" than what is actually contained. 
@@ -323,87 +338,33 @@ test_mu aa bb = (mu aa == bb)
  
 check5 = quickCheck $ test_mu xx (MyCons 3 (MyCons 2 (MyCons 1 (MyCons 30 (MyCons 20 (MyCons 10 MyNil))))))
 
--- bind operator >>=, using mu and fmap
-(>>=) :: MyList a -> (a -> MyList b) -> MyList b
-infixl >>=
-l >>= f = mu (fmap f l)
-
-msqr a = rtn (a*a)
-
-test_bind_op a b = (a >>= msqr) == b
-
-check6 = quickCheck $ test_bind_op x (MyCons 9 (MyCons 4 (MyCons 1 MyNil)))
-
--- bind, but this time directly without using mu and fmap
-bind:: MyList a -> (a -> MyList b) -> MyList b
-infixl `bind`
-MyNil `bind` _ = MyNil
--- Core definition of monoid (underlying the monad) for List: go through each element of list, apply function to each element that returns a sub-list. Pre-concatenate it with rest of result (recursively). If the lists are nested
--- further, this operation better be associative.
--- is associative.
-(MyCons x l) `bind` f = concat (f x) (l `bind` f)
-
-test_bind a b = (a `bind` msqr) == b 
-check7 = quickCheck $ test_bind x (MyCons 9 (MyCons 4 (MyCons 1 MyNil)))
-
--- 3ply nested list
----xxx = MyCons (MyCons (MyCons 3 MyNil) (MyCons (MyCons 2 MyNil) (MyCons (MyCons 1 MyNil) MyNil))) MyNil
-{-
-xxx = [  [
-           [1,2,3]
-         ], 
-         [
-           [10,20,30],[100,200,300]
-         ],
-         [
-           [400]
-         ]
-      ]
--}
-
-{-
-
-Note that you can use asTypeOf to investigate the instantiation (natural component) of mu in the first and second occurence: mu . fmap mu:
-
-Prelude Main> ((mu `asTypeOf` _) . fmap mu) xxx
-
-<interactive>:2:17: error:
-    • Found hole: _ :: MyList (MyList Integer) -> MyList Integer
-      ...
-          with mu @Integer
-
-Prelude Main> (mu . fmap (mu `asTypeOf` _)) xxx
-
-<interactive>:3:27: error:
-    • Found hole: _ :: MyList (MyList Integer) -> MyList Integer
-      ...
-          with mu @Integer
--}
-
 -- Due to associativity (mu. fmap mu = mu . mu)
-test_mu_mu_and_mu_fmap aaa = ( (mu . mu) aaa ) == (mu . fmap mu) aaa
+-- Let's first specify the components of natural transformations mu that we expect.
+mu_mi :: MyList (MyList (MyList Integer)) -> MyList (MyList Integer)
+mu_mi = mu
+mu_i :: MyList (MyList Integer) -> MyList Integer 
+mu_i = mu
+-- Using `asTypeOf` to prove that the natural transformation components of mu used are what expected to be
+-- You can also use (mu . (mu `asTypeOf` _)) xxx in ghci with main commented out to verify the types.
+test_mu_mu_and_mu_fmap aaa = ( ( (mu `asTypeOf` mu_i) . (mu `asTypeOf` mu_mi)) aaa ) == ((mu `asTypeOf` mu_i) . fmap (mu `asTypeOf` mu_i)) aaa
 
 check8 = quickCheck $ test_mu_mu_and_mu_fmap xxx
 
-{-
+type (g :<*> f) a = g (f a)
 
-Prelude Main> (mu . (mu `asTypeOf` _)) xxx
+(<*>) ::  (Functor a) => (a (a z) -> a (a y)) -> (a x -> a z) -> a (a x) -> a (a y)
+(<*>) g f = g . fmap f
 
-    • Found hole:
-        _ :: MyList (MyList (MyList Integer)) -> MyList (MyList Integer)
-        ...
-        with mu @(MyList Integer)
-          
-Prelude Main> ((mu `asTypeOf` _) . mu) xxx
+law2_left, law2_right :: ( MyList :<*> (MyList :<*> MyList) ) Integer -> MyList Integer
+law2_left  = (mu `asTypeOf` mu_i) . ((mu `asTypeOf` mu_mi) <*> id)
+law2_right = (mu `asTypeOf` mu_i) . (id <*> (mu `asTypeOf` mu_i))
 
-<interactive>:3:17: error:
-    • Found hole: _ :: MyList (MyList Integer) -> MyList Integer
-      ...
-      with mu @Integer
--}
+check101 = quickCheck $ \n -> law2_left n == law2_right (n::MyList (MyList (MyList Integer)))
+
 
 -- Now let's use horiz comp
 -- First define nat. trans constraint as map from functor to functor
+
 {-
 First we need to solve a problem, we need to make Haskell think that MyList MyList is a functor.
 This is so that mu :: MyList (MyList a) -> MyList a is considered a function from a functor MyList MyList to MyList,
@@ -419,34 +380,13 @@ https://wiki.haskell.org/Type_composition
 
 type (~>) f g = forall a. f a -> g a
 
-
 data HC g f a = HC { unHC :: g (f a) } deriving (Show)
-type (g :<*> f) a = g (f a)
 
--- Instead of using HC, consider creating a type alias for an operator (for example, :<*>) to give the visual appeal of the fact that we are dealing with monoid operator, i.e., (g :<*> f) a = g (f a)
--- See http://blog.sigfpe.com/2008/11/from-monoids-to-monads.html for example how it is done there.
 
 -- | horizontal composition of natural transformations
 hc :: Functor g => (g ~> g') -> (f ~> f') -> ((g `HC` f) ~> (g' `HC` f'))
 g `hc` f = HC . g . fmap f . unHC
 
-
---(<*>) :: (Functor a, Functor b, Functor c, Functor d) => (a (d x) -> c (d y)) -> (b z -> d x) -> a (b z) -> c (d y)
--- this works too: (<*>) ::  (Functor a, Functor b) => (a (a x) -> a (a y)) -> (b z -> a x) -> a (b z) -> a (a y)
---(<*>) :: (Functor a, Functor b, Functor c, Functor d) =>  (c y -> d y) -> (a x -> b x) -> c (a x) -> d (b x)
--- this works for rhs_plain only not lhs_plain : (<*>) ::  (Functor a, Functor b) => (a (a x) -> a (a y)) -> (b x -> a x) -> a (b x) -> a (a y)
--- this also works again for rhs_plain only : (<*>) ::  (Functor a) => (a (a x) -> a (a y)) -> (a x -> a x) -> a (a x) -> a (a y)
-
--- this works for both: (<*>) ::  (Functor a, Functor b) => (a (a z) -> a (a y)) -> (b x -> a z) -> a (b x) -> a (a y)
-
--- this works too for both since there is only one functor
-(<*>) ::  (Functor a) => (a (a z) -> a (a y)) -> (a x -> a z) -> a (a x) -> a (a y)
-
---(<*>) ::  (Functor a, Functor b) => (c z -> d z) -> (b x -> a x) -> a (b x) -> a (a y)
-
---(<*>) :: (Functor f, Functor g, Functor f', Functor g') => (forall y. g y -> g' y) -> (forall x. f x -> f' x) -> (forall z. g (f z) -> g' (f' z))
-
-(<*>) g f = g . fmap f
 
 class NatBiFunctor b where
   -- bimap2 is basically a special case of horizontal composition of two natural transformations (f ~> f') and (g ~> g'). 
@@ -488,12 +428,6 @@ bimap2 f g = HC . g . fmap f . unHC
 
 -}
 
-{-
-can we verify actual instantiation of mu via something like:
-
-https://stackoverflow.com/questions/65258061/can-i-print-in-haskell-the-type-of-a-polymorphic-function-as-it-would-become-if
-
--}
 
 f_1 :: MyList a -> MyList a
 f_1 x = x
@@ -510,13 +444,6 @@ xxxhclhs = HC (Identity (HC xxx))
 -}
 
 lhs v = mu ( unHC (bimap2 f_1 g_1 v) )
-lhs_plain = mu . (id <*> mu)
-
-test101 = do
-  putStrLn "test101"
-  print $ xxx
-  print $ lhs_plain xxx
-  putStrLn "-------"
 
 
 {-
@@ -615,13 +542,6 @@ Notice how this paralles: concat (concat x y) z = concat x (concat y z), +(+(a b
 
 rhs v = mu (unHC (bimap2 f_2 g_2 v))
 
-rhs_plain = mu . (mu <*> id)
-
-test102 = do
-  putStrLn "test102"
-  print $ xxx
-  print $ rhs_plain xxx
-  putStrLn "-------"
 
 test_assoc_via_bimap_aka_horiz_comp aaa bbb = lhs aaa == rhs bbb
 
@@ -743,6 +663,29 @@ So bimap2 is a horizontal composition of natural transformations as promised.
 
 --- end of horiz comp based analysis --
 
+-- bind operator >>=, using mu and fmap
+(>>=) :: MyList a -> (a -> MyList b) -> MyList b
+infixl >>=
+l >>= f = mu (fmap f l)
+
+msqr a = rtn (a*a)
+
+test_bind_op a b = (a >>= msqr) == b
+
+check6 = quickCheck $ test_bind_op x (MyCons 9 (MyCons 4 (MyCons 1 MyNil)))
+
+-- bind, but this time directly without using mu and fmap
+bind:: MyList a -> (a -> MyList b) -> MyList b
+infixl `bind`
+MyNil `bind` _ = MyNil
+-- Core definition of monoid (underlying the monad) for List: go through each element of list, apply function to each element that returns a sub-list. Pre-concatenate it with rest of result (recursively). If the lists are nested
+-- further, this operation better be associative.
+-- is associative.
+(MyCons x l) `bind` f = concat (f x) (l `bind` f)
+
+test_bind a b = (a `bind` msqr) == b 
+check7 = quickCheck $ test_bind x (MyCons 9 (MyCons 4 (MyCons 1 MyNil)))
+
 
 {-
 
@@ -856,13 +799,15 @@ main = do
   check10
   check11
   check12
-  do { test101 }
-  do { test102 }
-
+  check101
 {-
 And we haven't yet talked about mappend:
 
 https://stackoverflow.com/questions/10961483/haskell-duplicated-functions-and-mappend
 
+References:
+
+https://stackoverflow.com/questions/65258061/can-i-print-in-haskell-the-type-of-a-polymorphic-function-as-it-would-become-if
+http://blog.sigfpe.com/2008/11/from-monoids-to-monads.html for example how it is done there.
 -}
 
