@@ -361,9 +361,25 @@ law2_right = (mu `asTypeOf` mu_i) . (id <*> (mu `asTypeOf` mu_i))
 
 check101 = quickCheck $ \n -> law2_left n == law2_right (n::MyList (MyList (MyList Integer)))
 
+{-
+The type signature of <*> is particularly not enlightening. 
+There is a different way to look the <*> operation that sheds more light, particularly as a bifunctor of endofunctor composition 
+and its connection to horizontal composition.
 
--- Now let's use horiz comp
+First note that, although horizontal composition (which itself is a natural transformation) is generally written as having components 
+at an (categorical) object, the constituents have components at different objects. Let's look at the definition:
+
+Let α: F -> F' and β: G -> G' two natural transformations.
+
+(β ∘ α)_a = G' α_a . β_F a = β_F'a . G α_a
+
+Here β is not a-component, but either F a or F' a component where as α is a-component.
+
+-}
+
 -- First define nat. trans constraint as map from functor to functor
+type (~>) f g = forall a. f a -> g a
+
 
 {-
 First we need to solve a problem, we need to make Haskell think that MyList MyList is a functor.
@@ -375,10 +391,8 @@ There is no direct way of doing it. We have to wrap inside a Compose (like HC or
 https://stackoverflow.com/questions/25210743/bicategories-in-haskell
 https://wiki.haskell.org/Type_composition
 
-
 -}
 
-type (~>) f g = forall a. f a -> g a
 
 data HC g f a = HC { unHC :: g (f a) } deriving (Show)
 
