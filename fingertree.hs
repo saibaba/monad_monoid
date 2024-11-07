@@ -16,6 +16,8 @@ https://dkalemis.wordpress.com/2014/03/22/trees-as-monads/
 
 https://www.reddit.com/r/haskell/comments/cb1j40/comment/etcqsts/
 
+Another example where it is difficult or not possible to create a good solution: https://stackoverflow.com/questions/56118477/implementing-monad-on-recursive-type
+
 -}
 
 main = do

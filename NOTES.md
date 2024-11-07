@@ -110,4 +110,6 @@ Ref
 * mappend is more general than (++) for list: https://stackoverflow.com/questions/10961483/haskell-duplicated-functions-and-mappend. For a monad, the monoid is the composite endofunctor (m m), and mappend is for mu? From wikipedia, any monad both gives rise to a category (called the Kleisli category) and a monoid in the category of functors (from values to computations), with monadic composition as a binary operator in the monoid and unit as identity in the monad.
 * If you get a hidden package error when loading a module, install it with --lib option, for example for QuickCheck `cabal install QuickCheck --lib`.
 * See important notes in `Further Reading` section: https://wiki.haskell.org/Typeclassopedia#Monoid
-
+* Apples/blueberry/functor: If you will give me a blueberry for each apple I give you (a -> b), and I have a box of apples (f a), then I can get a box of blueberries (f b): https://wiki.haskell.org/Monads_as_containers)
+* See this free monad answer: https://stackoverflow.com/a/13357359. Particularly notice how, since an endofunctor (or monad) can hold an instance of itself (endofunctor composition) -- i.e., its monoidic properties are leveraged directly to create a placeholder monad. Note that if a monad does not use any special properties of its structure, it is free. For example Maybe is free monad. List is not as it uses mappend in its bind/join.
+* Best intro to Free Monads: https://deque.blog/2017/11/13/free-monads-from-basics-up-to-implementing-composable-and-effectful-stream-processing/

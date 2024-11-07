@@ -3,7 +3,16 @@
 {-# LANGUAGE DatatypeContexts #-}
 
 {-
-Exercise: create my own version by replacing <#> by bimap, :<*> Compose etc., 
+Note: <#> is bimap, :<*> is compose.
+
+Monoidal category: If a category has a a construct that takes two objects and creates a new object - like comma, functor composition
+Monoid: an object in a monoidal category  additionally  with two maps: (1) mu: takes composition(by above construct) of the object with itself , and returns the same object. (2) unit/eta
+
+Let's consider a special category, endofunctor category with functor composition as the construct for being a monidal category.
+Let's say we are able to define mu and eta (by virtue these are nat. trans). Then we call this monad. 
+
+So, monad is a monoid in the categoru of endofunctors where functor composition is the product, mu is multiplication, ...
+
 -}
 
 -- http://blog.sigfpe.com/2008/11/from-monoids-to-monads.html
@@ -34,13 +43,23 @@ alpha ((x,y),z) = (x,(y,z))
 
 class Monoid m where
   one :: () -> m
+  -- There are few things going on in the mult definition below:
+  -- Cross product i.e., take two monoid instances m and m
+  -- Putting them together in a single structure, the comma operator (pair), a bifunctor
+  --   and by the help of <#> above we can operate on each - Here <#> bifunctor map or bimap
+  -- mult, the binary monoid operation which actually takes the bifunctor as argument 
+  --   (not the monoid instances themselves, buy their bifunctor (object mapping part of functor)
+  -- mult does not return a bifunctor but a monoid instance m.
   mult :: (m,m) -> m
 
+  -- In below laws, notice how mult and id are operated on the bifunctor enclosed monoid instances.
   law1_left,law1_middle,law1_right :: m -> m
   law1_left   = mult . (one <#> id) . lambda
   law1_middle = id
   law1_right  = mult . (id <#> one) . rho
 
+  -- Notice, the top level bifunctor ((m,m),m) contains a bifunctor (m,m) in it.
+  -- This is needed as we are proving associative law and it needs 3 items.
   law2_left,law2_right :: ((m,m),m) -> m
   law2_left = mult . (mult <#> id)
   law2_right = mult . (id <#> mult) . alpha
@@ -117,10 +136,12 @@ withErrorHandling :: forall a. Maybe a -> Either String a
 withErrorHandling Nothing = Left "Nothing?"
 withErrorHandling (Just x) = Right x
 
-
 -- With following, we are able to turn an endofunctor (composition) into a monoid
+-- This is possible because, endofunctor composition is bifunctor so we have a monoidal category
+-- So, as long as we are able to define a mult' operation, we can create a monoid 
 class Functor m => Monoid' m where
   one' :: Id a -> m a
+  -- Notice how mult' takes a bifunctor (endofunctor composition) as argument
   mult' :: (m :<*> m) a -> m a
   -- Also, notice that both one' and mult' are natural transformations
 
@@ -129,8 +150,8 @@ class Functor m => Monoid' m where
   law1_middle' = id
   law1_right'  = mult' . (id <*> one') . rho'
 
-  --It seems below can be written as this as well and there is no significance of it
-  --       law2_left',law2_right' :: ( (m :<*> m)  :<*> m) a -> m a
+  -- It seems below can be written as this as well and there is no significance of it
+  -- law2_left',law2_right' :: ( (m :<*> m)  :<*> m) a -> m a
   law2_left',law2_right' :: ( m :<*> (m :<*> m) ) a -> m a
   law2_left'  = mult' . (mult' <*> id)
   law2_right' = mult' . (id <*> mult') . alpha'
@@ -150,7 +171,7 @@ check4 = quickCheck $ \n -> law1_left' (Just n) == law1_middle' (Just (n :: Int)
 check5 = quickCheck $ \n -> law1_left' (Just n) == law1_right' (Just (n :: Int))
 check6 = quickCheck $ \n -> law2_left' (Just (Just (Just n))) == law2_right' (Just (Just (Just (n :: Int))))
 
--- showing monad is monoid
+-- showing monad is monoid by making an instace of Monoid' out of monad operations.
 -- Notice how we are able to generically create instance of Monoid' for Maybe just using return and >>=. 
 -- TranslateMonad given below automates this and demonstrates that any monad can be treated Monoid' generically. It is basically translating a Monad into Monoid'.
 
