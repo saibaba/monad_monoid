@@ -81,7 +81,8 @@ detect (f . (g . h)) = False
 
 Sure, what is the problem, then? Well with "." we are safe, it is universal operator operating on pure functions and not overloaded based on function type. All it matters that the input/output (types)  of functions being composed must match. We are able to compose any functions without knowing about them (their implementation). So "." is polymorphic.
 
-But, we do not live in pure world, we need functions that do different things based on the value, not type: For example Maybe or Either or List (empty vs. non-empty case) and so on. Here, the composition is not based on type but kleisli <=< as input and outputs of the functions being composed do not match. And this operator is not polymorphic.
+But, we do not live in pure world, we need functions that do different things based on the value, not type: For example Maybe or Either or List (empty vs. non-empty case) and so on. Here, the composition is not based on type but kleisli <=< as input and outputs of the functions being composed do not match. And this operator is not polymorphic. Ask ChatGPT for details.
+
 
 Still, what is the problem? Well, the composition of defined for the abstract data type T holding an object (like T in a -> T b) can define how the composition happens (via <=< operator that is being used to compose). For example see [this reference](https://stackoverflow.com/a/68075895). Also, different developers compose the same conditional logic differently (for example see monad_laws_assoc.hs and monad_laws_right_identity.hs).
 
@@ -1205,3 +1206,33 @@ Basically, this law means that for all a, T<sup>2</sup>T -> T<sup>2</sup> -> T o
 
 (https://math.stackexchange.com/questions/2101774/elaboration-for-%CE%BC-%E2%88%98t%CE%BC-%CE%BC-%E2%88%98-%CE%BCt-from-a-monad-definition)
 
+Side Bar 9
+---
+
+Why Kleisli operator not polymorphic?
+
+https://chatgpt.com/c/672c132b-5018-8010-81a8-05fe2a4f9cff
+
+Consider
+
+g:b→mc
+
+f:a→mb
+
+g <=< f :: a -> m c
+
+But there are certain expectations on monad, m. It has to be the same (Maybe or List etc.,) in both f and g above. For any specific usage of <=<, the choice of m is fixed, making it monomorphic in the monad within any given instance of composition. They cannot be polymorphically same.
+
+So, composing the following two is not possible with Kleisli operator:
+
+f :: a -> Maybe b
+g :: b -> [c]
+
+
+
+Opposed to this, "." is polymorphic: 
+(.) :: (b -> c) -> (a -> b) -> (a -> c)
+
+Here there are no further constraints on a, b, c.
+
+In summary, the Kleisli composition operator <=< is not polymorphic because it requires the two functions to work within the same monadic context, meaning the monad 𝑚.  m must be fixed for any given use of <=<. This is unlike truly polymorphic operators, such as ordinary function composition (.), which impose no such restriction and are hence fully polymorphic over types.
